@@ -16,7 +16,7 @@ type SetActorData struct {
 	EntityMetadata map[uint32]any
 	// EntityProperties is a list of properties that the entity inhibits. These properties define and alter specific
 	// attributes of the entity.
-	EntityProperties protocol.EntityProperties
+	EntityProperties protocol.PropertySyncData
 	// Tick is the server tick at which the packet was sent. It is used in relation to CorrectPlayerMovePrediction.
 	Tick uint64
 }

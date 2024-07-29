@@ -10,7 +10,7 @@ type SetActorLink struct {
 	// EntityLink is the link to be set client-side. It links two entities together, so that one entity rides
 	// another. Note that players that see those entities later will not see the link, unless it is also sent
 	// in the AddActor and AddPlayer packets.
-	EntityLink protocol.EntityLink
+	EntityLink protocol.ActorLink
 }
 
 // ID ...
