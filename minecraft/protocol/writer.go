@@ -3,14 +3,15 @@ package protocol
 import (
 	"bytes"
 	"fmt"
-	"github.com/go-gl/mathgl/mgl32"
-	"github.com/google/uuid"
-	"github.com/sandertv/gophertunnel/minecraft/nbt"
 	"image/color"
 	"io"
 	"reflect"
 	"sort"
 	"unsafe"
+
+	"github.com/go-gl/mathgl/mgl32"
+	"github.com/google/uuid"
+	"github.com/sandertv/gophertunnel/minecraft/nbt"
 )
 
 // Writer implements writing methods for data types from Minecraft packets. Each Packet implementation has one
@@ -25,7 +26,7 @@ type Writer struct {
 	shieldID int32
 }
 
-// NewWriter creates a new initialised Writer with an underlying io.ByteWriter to write to.
+// NewWriter creates a new initialized Writer with an underlying io.ByteWriter to write to.
 func NewWriter(w interface {
 	io.Writer
 	io.ByteWriter

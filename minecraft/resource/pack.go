@@ -5,13 +5,14 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
-	"github.com/muhammadmuzzammil1998/jsonc"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+
+	"github.com/muhammadmuzzammil1998/jsonc"
 )
 
 // Pack is a container of a resource pack parsed from a directory or a .zip archive (or .mcpack). It holds
@@ -155,12 +156,12 @@ func (pack *Pack) HasScripts() bool {
 	return false
 }
 
-// HasBehaviours checks if any of the modules of the resource pack have either the type 'data' or
-// 'client_data', meaning they contain behaviours (or scripts).
-func (pack *Pack) HasBehaviours() bool {
+// HasBehaviors checks if any of the modules of the resource pack have either the type 'data' or
+// 'client_data', meaning they contain behaviors (or scripts).
+func (pack *Pack) HasBehaviors() bool {
 	for _, module := range pack.manifest.Modules {
 		if module.Type == "client_data" || module.Type == "data" {
-			// The module has the client_data or data type, meaning it holds behaviours.
+			// The module has the client_data or data type, meaning it holds behaviors.
 			return true
 		}
 	}

@@ -17,7 +17,7 @@ type ModalFormRequest struct {
 
 // ID ...
 func (*ModalFormRequest) ID() uint32 {
-	return IDModalFormRequest
+	return IDShowModalForm
 }
 
 func (pk *ModalFormRequest) Marshal(io protocol.IO) {

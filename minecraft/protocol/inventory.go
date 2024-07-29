@@ -65,7 +65,7 @@ const (
 // InventoryTransactionData represents an object that holds data specific to an inventory transaction type.
 // The data it holds depends on the type.
 type InventoryTransactionData interface {
-	// Marshal encodes/decodes a serialised inventory transaction data object.
+	// Marshal encodes/decodes a serialized inventory transaction data object.
 	Marshal(r IO)
 }
 
@@ -149,7 +149,7 @@ type UseItemTransactionData struct {
 	// clicked. When breaking the block, it is the face that was last being hit until the block broke.
 	BlockFace int32
 	// HotBarSlot is the hot bar slot that the player was holding while clicking the block. It should be used
-	// to ensure that the hot bar slot and held item are correctly synchronised with the server.
+	// to ensure that the hot bar slot and held item are correctly synchronized with the server.
 	HotBarSlot int32
 	// HeldItem is the item that was held to interact with the block. The server should check if this item
 	// is actually present in the HotBarSlot.
@@ -161,7 +161,7 @@ type UseItemTransactionData struct {
 	// used to find out exactly where a player clicked the block.
 	ClickedPosition mgl32.Vec3
 	// BlockRuntimeID is the runtime ID of the block that was clicked. It may be used by the server to verify
-	// that the player's world client-side is synchronised with the server's.
+	// that the player's world client-side is synchronized with the server's.
 	BlockRuntimeID uint32
 }
 
@@ -180,7 +180,7 @@ type UseItemOnEntityTransactionData struct {
 	// found in the constants above, and specifies the way the player interacted with the entity.
 	ActionType uint32
 	// HotBarSlot is the hot bar slot that the player was holding while clicking the entity. It should be used
-	// to ensure that the hot bar slot and held item are correctly synchronised with the server.
+	// to ensure that the hot bar slot and held item are correctly synchronized with the server.
 	HotBarSlot int32
 	// HeldItem is the item that was held to interact with the entity. The server should check if this item
 	// is actually present in the HotBarSlot.
@@ -206,7 +206,7 @@ type ReleaseItemTransactionData struct {
 	// it) or releasing a bow (to shoot an arrow) is essentially the same.
 	ActionType uint32
 	// HotBarSlot is the hot bar slot that the player was holding while releasing the item. It should be used
-	// to ensure that the hot bar slot and held item are correctly synchronised with the server.
+	// to ensure that the hot bar slot and held item are correctly synchronized with the server.
 	HotBarSlot int32
 	// HeldItem is the item that was released. The server should check if this item is actually present in the
 	// HotBarSlot.

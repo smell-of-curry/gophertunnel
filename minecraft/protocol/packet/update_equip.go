@@ -20,10 +20,10 @@ type UpdateEquip struct {
 	// EntityUniqueID is the unique ID of the entity whose equipment was 'updated' to the player. It is
 	// typically the horse entity that had its inventory opened.
 	EntityUniqueID int64
-	// SerialisedInventoryData is a network NBT serialised compound holding the content of the inventory of
+	// SerializedInventoryData is a network NBT serialized compound holding the content of the inventory of
 	// the entity (the equipment) and additional data such as the allowed items for a particular slot, used to
 	// make sure only saddles can be put in the saddle slot etc.
-	SerialisedInventoryData []byte
+	SerializedInventoryData []byte
 }
 
 // ID ...
@@ -36,5 +36,5 @@ func (pk *UpdateEquip) Marshal(io protocol.IO) {
 	io.Uint8(&pk.WindowType)
 	io.Varint32(&pk.Size)
 	io.Varint64(&pk.EntityUniqueID)
-	io.Bytes(&pk.SerialisedInventoryData)
+	io.Bytes(&pk.SerializedInventoryData)
 }

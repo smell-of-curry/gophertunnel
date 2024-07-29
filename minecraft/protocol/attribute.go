@@ -20,18 +20,18 @@ type AttributeValue struct {
 	Name string
 	// Value is the current value of the attribute. This value will be applied to the entity when sent in a
 	// packet.
-	Value float32
+	Current float32
 	// Max and Min specify the boundaries within the value of the attribute must be. The definition of these
 	// fields differ per attribute. The maximum health of an entity may be changed, whereas the maximum
 	// movement speed for example may not be.
-	Max, Min float32
+	Min, Max float32
 }
 
 // Marshal encodes/decodes an AttributeValue.
 func (x *AttributeValue) Marshal(r IO) {
 	r.String(&x.Name)
 	r.Float32(&x.Min)
-	r.Float32(&x.Value)
+	r.Float32(&x.Current)
 	r.Float32(&x.Max)
 }
 
@@ -50,7 +50,7 @@ type Attribute struct {
 func (x *Attribute) Marshal(r IO) {
 	r.Float32(&x.Min)
 	r.Float32(&x.Max)
-	r.Float32(&x.Value)
+	r.Float32(&x.Current)
 	r.Float32(&x.Default)
 	r.String(&x.Name)
 	Slice(r, &x.Modifiers)

@@ -6,17 +6,18 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"github.com/sandertv/gophertunnel/minecraft/protocol"
-	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
-	"github.com/sandertv/gophertunnel/minecraft/resource"
 	"log"
 	"net"
 	"os"
 	"sync/atomic"
 	"time"
+
+	"github.com/sandertv/gophertunnel/minecraft/protocol"
+	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
+	"github.com/sandertv/gophertunnel/minecraft/resource"
 )
 
-// ListenConfig holds settings that may be edited to change behaviour of a Listener.
+// ListenConfig holds settings that may be edited to change behavior of a Listener.
 type ListenConfig struct {
 	// ErrorLog is a log.Logger that errors that occur during packet handling of clients are written to. By
 	// default, ErrorLog is set to one equal to the global logger.

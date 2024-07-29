@@ -23,7 +23,7 @@ type BlockEvent struct {
 
 // ID ...
 func (*BlockEvent) ID() uint32 {
-	return IDBlockEvent
+	return IDTileEvent
 }
 
 func (pk *BlockEvent) Marshal(io protocol.IO) {

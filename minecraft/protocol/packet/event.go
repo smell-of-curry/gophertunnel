@@ -19,7 +19,7 @@ type Event struct {
 
 // ID returns the packet ID.
 func (*Event) ID() uint32 {
-	return IDEvent
+	return IDLegacyTelemetryEvent
 }
 
 // Marshal writes the packet fields to the protocol IO.

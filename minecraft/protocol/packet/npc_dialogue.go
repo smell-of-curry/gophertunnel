@@ -26,7 +26,7 @@ type NPCDialogue struct {
 
 // ID ...
 func (*NPCDialogue) ID() uint32 {
-	return IDNPCDialogue
+	return IDNpcDialogue
 }
 
 func (pk *NPCDialogue) Marshal(io protocol.IO) {

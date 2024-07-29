@@ -15,7 +15,7 @@ const (
 // screen is cleared client-side, the client will send a PlayerAction packet with
 // PlayerActionDimensionChangeDone.
 type ChangeDimension struct {
-	// Dimension is the dimension that the client should be changed to. The fog colour will change depending
+	// Dimension is the dimension that the client should be changed to. The fog color will change depending
 	// on the type of dimension, which is one of the constants above.
 	// Note that Dimension MUST be a different dimension than the one that the player is currently in. Sending
 	// a ChangeDimension packet with a Dimension that the player is currently in will result in a never-ending

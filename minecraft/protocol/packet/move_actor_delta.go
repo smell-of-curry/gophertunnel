@@ -35,7 +35,7 @@ type MoveActorDelta struct {
 
 // ID ...
 func (*MoveActorDelta) ID() uint32 {
-	return IDMoveActorDelta
+	return IDMoveDeltaActor
 }
 
 func (pk *MoveActorDelta) Marshal(io protocol.IO) {

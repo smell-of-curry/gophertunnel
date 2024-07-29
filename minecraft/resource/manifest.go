@@ -64,7 +64,7 @@ type Dependency struct {
 	Version [3]int `json:"version"`
 }
 
-// Capability is a particular feature that the pack utilises of that isn't necessarily enabled by default.
+// Capability is a particular feature that the pack utilizes of that isn't necessarily enabled by default.
 //   experimental_custom_ui: Allows HTML files in the pack to be used for custom UI, and scripts in the pack
 //                           to call and manipulate custom UI.
 //   chemistry:              Allows the pack to add, change or replace Chemistry functionality.

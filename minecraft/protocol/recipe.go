@@ -98,7 +98,7 @@ const (
 type Recipe interface {
 	// Marshal encodes the recipe data to its binary representation into buf.
 	Marshal(w *Writer)
-	// Unmarshal decodes a serialised recipe from Reader r into the recipe instance.
+	// Unmarshal decodes a serialized recipe from Reader r into the recipe instance.
 	Unmarshal(r *Reader)
 }
 

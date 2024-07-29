@@ -28,7 +28,7 @@ type StructureTemplateDataRequest struct {
 
 // ID ...
 func (pk *StructureTemplateDataRequest) ID() uint32 {
-	return IDStructureTemplateDataRequest
+	return IDStructureTemplateDataExportRequest
 }
 
 func (pk *StructureTemplateDataRequest) Marshal(io protocol.IO) {

@@ -19,7 +19,7 @@ type NetworkStackLatency struct {
 
 // ID ...
 func (*NetworkStackLatency) ID() uint32 {
-	return IDNetworkStackLatency
+	return IDPing
 }
 
 func (pk *NetworkStackLatency) Marshal(io protocol.IO) {

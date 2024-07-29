@@ -69,9 +69,9 @@ const (
 // these events are entity-specific, for example a wolf shaking itself dry, but others are used for each
 // entity, such as dying.
 type ActorEvent struct {
-	// EntityRuntimeID is the runtime ID of the entity. The runtime ID is unique for each world session, and
+	// TargetRuntimeID is the runtime ID of the target entity. The runtime ID is unique for each world session, and
 	// entities are generally identified in packets using this runtime ID.
-	EntityRuntimeID uint64
+	TargetRuntimeID uint64
 	// EventType is the ID of the event to be called. It is one of the constants that can be found above.
 	EventType byte
 	// EventData is optional data associated with a particular event. The data has a different function for
@@ -85,7 +85,7 @@ func (*ActorEvent) ID() uint32 {
 }
 
 func (pk *ActorEvent) Marshal(io protocol.IO) {
-	io.Varuint64(&pk.EntityRuntimeID)
+	io.Varuint64(&pk.TargetRuntimeID)
 	io.Uint8(&pk.EventType)
 	io.Varint32(&pk.EventData)
 }

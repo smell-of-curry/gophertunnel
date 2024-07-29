@@ -19,7 +19,7 @@ type PlayerHotBar struct {
 
 // ID ...
 func (*PlayerHotBar) ID() uint32 {
-	return IDPlayerHotBar
+	return IDPlayerHotbar
 }
 
 func (pk *PlayerHotBar) Marshal(io protocol.IO) {

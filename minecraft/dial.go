@@ -12,13 +12,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-jose/go-jose/v3/jwt"
-	"github.com/google/uuid"
-	"github.com/sandertv/gophertunnel/minecraft/auth"
-	"github.com/sandertv/gophertunnel/minecraft/protocol"
-	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
-	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
-	"golang.org/x/oauth2"
 	"log"
 	"math/rand"
 	"net"
@@ -26,6 +19,14 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-jose/go-jose/v3/jwt"
+	"github.com/google/uuid"
+	"github.com/sandertv/gophertunnel/minecraft/auth"
+	"github.com/sandertv/gophertunnel/minecraft/protocol"
+	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
+	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
+	"golang.org/x/oauth2"
 )
 
 // Dialer allows specifying specific settings for connection to a Minecraft server.
@@ -57,7 +58,7 @@ type Dialer struct {
 	// from which the packet originated, and the destination address.
 	PacketFunc func(header packet.Header, payload []byte, src, dst net.Addr)
 
-	// DownloadResourcePack is called individually for every texture and behaviour pack sent by the connection when
+	// DownloadResourcePack is called individually for every texture and behavior pack sent by the connection when
 	// using Dialer.Dial(), and can be used to stop the pack from being downloaded. The function is called with the UUID
 	// and version of the resource pack, the number of the current pack being downloaded, and the total amount of packs.
 	// The boolean returned determines if the pack will be downloaded or not.
@@ -103,7 +104,7 @@ type Dialer struct {
 // "raknet". A Conn is returned which may be used to receive packets from and send packets to.
 //
 // A zero value of a Dialer struct is used to initiate the connection. A custom Dialer may be used to specify
-// additional behaviour.
+// additional behavior.
 func Dial(network, address string) (*Conn, error) {
 	var d Dialer
 	return d.Dial(network, address)
@@ -369,8 +370,8 @@ func defaultClientData(address, username string, d *login.ClientData) {
 	if d.PersonaPieces == nil {
 		d.PersonaPieces = make([]login.PersonaPiece, 0)
 	}
-	if d.PieceTintColours == nil {
-		d.PieceTintColours = make([]login.PersonaPieceTintColour, 0)
+	if d.PieceTintColors == nil {
+		d.PieceTintColors = make([]login.PersonaPieceTintColor, 0)
 	}
 	if d.SelfSignedID == "" {
 		d.SelfSignedID = uuid.New().String()

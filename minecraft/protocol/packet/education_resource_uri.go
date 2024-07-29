@@ -10,7 +10,7 @@ type EducationResourceURI struct {
 
 // ID ...
 func (*EducationResourceURI) ID() uint32 {
-	return IDEducationResourceURI
+	return IDEduUriResource
 }
 
 func (pk *EducationResourceURI) Marshal(io protocol.IO) {

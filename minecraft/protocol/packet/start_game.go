@@ -52,11 +52,11 @@ type StartGame struct {
 	// WorldSeed is the seed used to generate the world. Unlike in PC edition, the seed is a 32bit integer
 	// here.
 	WorldSeed int64
-	// SpawnBiomeType specifies if the biome that the player spawns in is user defined (through behaviour
+	// SpawnBiomeType specifies if the biome that the player spawns in is user defined (through behavior
 	// packs) or builtin. See the constants above.
 	SpawnBiomeType int16
 	// UserDefinedBiomeName is a readable name of the biome that the player spawned in, such as 'plains'. This
-	// might be a custom biome name if any custom biomes are present through behaviour packs.
+	// might be a custom biome name if any custom biomes are present through behavior packs.
 	UserDefinedBiomeName string
 	// Dimension is the ID of the dimension that the player spawns in. It is a value from 0-2, with 0 being
 	// the overworld, 1 being the nether and 2 being the end.
@@ -149,10 +149,10 @@ type StartGame struct {
 	// ServerChunkTickRadius is the radius around the player in which chunks are ticked. Most servers set this
 	// value to a fixed number, as it does not necessarily affect anything client-side.
 	ServerChunkTickRadius int32
-	// HasLockedBehaviourPack specifies if the behaviour pack of the world is locked, meaning it cannot be
+	// HasLockedBehaviorPack specifies if the behavior pack of the world is locked, meaning it cannot be
 	// disabled from the world. This is typically set for worlds on the marketplace that have a dedicated
-	// behaviour pack.
-	HasLockedBehaviourPack bool
+	// behavior pack.
+	HasLockedBehaviorPack bool
 	// HasLockedTexturePack specifies if the texture pack of the world is locked, meaning it cannot be
 	// disabled from the world. This is typically set for worlds on the marketplace that have a dedicated
 	// texture pack.
@@ -300,7 +300,7 @@ func (pk *StartGame) Marshal(io protocol.IO) {
 	io.Bool(&pk.StartWithMapEnabled)
 	io.Varint32(&pk.PlayerPermissions)
 	io.Int32(&pk.ServerChunkTickRadius)
-	io.Bool(&pk.HasLockedBehaviourPack)
+	io.Bool(&pk.HasLockedBehaviorPack)
 	io.Bool(&pk.HasLockedTexturePack)
 	io.Bool(&pk.FromLockedWorldTemplate)
 	io.Bool(&pk.MSAGamerTagsOnly)

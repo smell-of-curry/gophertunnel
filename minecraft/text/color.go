@@ -2,9 +2,10 @@ package text
 
 import (
 	"fmt"
-	"golang.org/x/net/html"
 	"regexp"
 	"strings"
+
+	"golang.org/x/net/html"
 )
 
 // cleaner represents the regex used to clean Minecraft formatting codes from a string.
@@ -25,8 +26,8 @@ func ANSI(a ...any) string {
 	return strings.Join(str, " ")
 }
 
-// Colourf colours the format string using HTML tags after first escaping all parameters passed and
-// substituting them in the format string. The following colours and formatting may be used:
+// Colorf fcolors the format string using HTML tags after first escaping all parameters passed and
+// substituting them in the format string. The following colors and formatting may be used:
 //
 //	black, dark-blue, dark-green, dark-aqua, dark-red, dark-purple, gold, grey, dark-grey, blue, green, aqua,
 //	red, purple, yellow, white, dark-yellow, quartz, iron, netherite, redstone, copper, gold, emerald, diamond,
@@ -34,7 +35,7 @@ func ANSI(a ...any) string {
 //
 // These HTML tags may also be nested, like so:
 // `<red>Hello <bold>World</bold>!</red>`
-func Colourf(format string, a ...any) string {
+func Colorf(format string, a ...any) string {
 	str := fmt.Sprintf(format, a...)
 
 	e := &enc{w: &strings.Builder{}, first: true}
@@ -48,15 +49,15 @@ func Colourf(format string, a ...any) string {
 	return e.w.String()
 }
 
-// enc holds the state of a string to be processed for colour substitution.
+// enc holds the state of a string to be processed for color substitution.
 type enc struct {
 	w           *strings.Builder
 	formatStack []string
 	first       bool
 }
 
-// process handles a single html.Token and either writes the string to the strings.Builder, adds a colour to
-// the stack or removes a colour from the stack.
+// process handles a single html.Token and either writes the string to the strings.Builder, adds a color to
+// the stack or removes a color from the stack.
 func (e *enc) process(tok html.Token) {
 	if e.first {
 		e.w.WriteString(Reset)
@@ -70,7 +71,7 @@ func (e *enc) process(tok html.Token) {
 			e.formatStack = append(e.formatStack, format)
 			return
 		}
-		// Not a known colour, so just write the token as a string.
+		// Not a known color, so just write the token as a string.
 		e.writeText("<" + tok.Data + ">")
 	case html.EndTagToken:
 		for i, format := range e.formatStack {
@@ -79,7 +80,7 @@ func (e *enc) process(tok html.Token) {
 				return
 			}
 		}
-		// Not a known colour, so just write the token as a string.
+		// Not a known color, so just write the token as a string.
 		e.writeText("</" + tok.Data + ">")
 	}
 }

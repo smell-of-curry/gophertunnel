@@ -65,7 +65,7 @@ func (x *MapTrackedObject) Marshal(r IO) {
 // MapDecoration is a fixed decoration on a map: Its position or other properties do not change automatically
 // client-side.
 type MapDecoration struct {
-	// Type is the type of the map decoration. The type specifies the shape (and sometimes the colour) that
+	// Type is the type of the map decoration. The type specifies the shape (and sometimes the color) that
 	// the map decoration gets. It is one of the MapDecorationType constants above.
 	Type byte
 	// Rotation is the rotation of the map decoration. It is byte due to the 16 fixed directions that the
@@ -77,9 +77,9 @@ type MapDecoration struct {
 	Y byte
 	// Label is the name of the map decoration. This name may be of any value.
 	Label string
-	// Colour is the colour of the map decoration. Some map decoration types have a specific colour set
+	// Color is the color of the map decoration. Some map decoration types have a specific color set
 	// automatically, whereas others may be changed.
-	Colour color.RGBA
+	Color color.RGBA
 }
 
 // Marshal encodes/decodes a MapDecoration.
@@ -89,17 +89,17 @@ func (x *MapDecoration) Marshal(r IO) {
 	r.Uint8(&x.X)
 	r.Uint8(&x.Y)
 	r.String(&x.Label)
-	r.VarRGBA(&x.Colour)
+	r.VarRGBA(&x.Color)
 }
 
-// PixelRequest is the request for the colour of a pixel in a MapInfoRequest packet.
+// PixelRequest is the request for the color of a pixel in a MapInfoRequest packet.
 type PixelRequest struct {
-	Colour color.RGBA
-	Index  uint16
+	Color color.RGBA
+	Index uint16
 }
 
 // Marshal encodes/decodes a PixelRequest.
 func (x *PixelRequest) Marshal(r IO) {
-	r.RGBA(&x.Colour)
+	r.RGBA(&x.Color)
 	r.Uint16(&x.Index)
 }

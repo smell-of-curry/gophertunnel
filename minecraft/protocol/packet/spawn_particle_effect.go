@@ -7,7 +7,7 @@ import (
 
 // SpawnParticleEffect is sent by the server to spawn a particle effect client-side. Unlike other packets that
 // result in the appearing of particles, this packet can show particles that are not hardcoded in the client.
-// They can be added and changed through behaviour packs to implement custom particles.
+// They can be added and changed through behavior packs to implement custom particles.
 type SpawnParticleEffect struct {
 	// Dimension is the dimension that the particle is spawned in. Its exact usage is not clear, as the
 	// dimension has no direct effect on the particle.
@@ -21,7 +21,7 @@ type SpawnParticleEffect struct {
 	// If EntityUniqueID is not -1, the position will be relative to the position of the entity.
 	Position mgl32.Vec3
 	// ParticleName is the name of the particle that should be shown. This name may point to a particle effect
-	// that is built-in, or to one implemented by behaviour packs.
+	// that is built-in, or to one implemented by behavior packs.
 	ParticleName string
 	// MoLangVariables is an encoded JSON map of MoLang variables that may be applicable to the particle spawn. This can
 	// just be left empty in most cases.

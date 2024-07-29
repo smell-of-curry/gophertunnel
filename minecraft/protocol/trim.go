@@ -1,6 +1,6 @@
 package protocol
 
-// TrimPattern represnets a pattern that can be applied to an armour pice in combination with a TrimMaterial.
+// TrimPattern represents a pattern that can be applied to an armour pice in combination with a TrimMaterial.
 type TrimPattern struct {
 	// ItemName is the identifier of the item that represents the pattern, for example
 	// 'minecraft:wayfinder_armor_trim_smithing_template'.
@@ -19,8 +19,8 @@ func (x *TrimPattern) Marshal(r IO) {
 type TrimMaterial struct {
 	// MaterialID is the identifier of the material, for example 'netherite'.
 	MaterialID string
-	// Colour is the colour code used for text formatting, for example '§j'.
-	Colour string
+	// Color is the color code used for text formatting, for example '§j'.
+	Color string
 	// ItemName is the identifier of the item that represents the material, for example 'minecraft:netherite_ingot'.
 	ItemName string
 }
@@ -28,6 +28,6 @@ type TrimMaterial struct {
 // Marshal ...
 func (x *TrimMaterial) Marshal(r IO) {
 	r.String(&x.MaterialID)
-	r.String(&x.Colour)
+	r.String(&x.Color)
 	r.String(&x.ItemName)
 }

@@ -19,7 +19,7 @@ type GUIDataPickItem struct {
 
 // ID ...
 func (*GUIDataPickItem) ID() uint32 {
-	return IDGUIDataPickItem
+	return IDGuiDataPickItem
 }
 
 func (pk *GUIDataPickItem) Marshal(io protocol.IO) {

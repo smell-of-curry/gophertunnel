@@ -32,7 +32,7 @@ type Skin struct {
 	// dimensions in bytes, but in pixels.
 	CapeImageWidth, CapeImageHeight uint32
 	// CapeData is a byte slice of 64*32*4 bytes. It is a RGBA ordered byte representation of the cape
-	// colours, much like the SkinData.
+	// colors, much like the SkinData.
 	CapeData []byte
 	// SkinGeometry is a JSON encoded structure of the geometry data of a skin, containing properties
 	// such as bones, uv, pivot etc.
@@ -55,17 +55,17 @@ type Skin struct {
 	// FullID is an ID that represents the skin in full. The actual functionality is unknown: The client
 	// does not seem to send a value for this.
 	FullID string
-	// SkinColour is a hex representation (including #) of the base colour of the skin. An example of the
-	// colour sent here is '#b37b62'.
-	SkinColour string
+	// SkinColor is a hex representation (including #) of the base color of the skin. An example of the
+	// color sent here is '#b37b62'.
+	SkinColor string
 	// ArmSize is the size of the arms of the player's model. This is either 'wide' (generally for male skins)
 	// or 'slim' (generally for female skins).
 	ArmSize string
 	// PersonaPieces is a list of all persona pieces that the skin is composed of.
 	PersonaPieces []PersonaPiece
-	// PieceTintColours is a list of specific tint colours for (some of) the persona pieces found in the list
+	// PieceTintColors is a list of specific tint colors for (some of) the persona pieces found in the list
 	// above.
-	PieceTintColours []PersonaPieceTintColour
+	PieceTintColors []PersonaPieceTintColor
 	// Trusted specifies if the skin is 'trusted'. No code should rely on this field, as any proxy or client
 	// can easily change it.
 	Trusted bool
@@ -92,11 +92,11 @@ func (x *Skin) Marshal(r IO) {
 	r.String(&x.CapeID)
 	r.String(&x.FullID)
 	r.String(&x.ArmSize)
-	r.String(&x.SkinColour)
+	r.String(&x.SkinColor)
 	SliceUint32Length(r, &x.PersonaPieces)
-	SliceUint32Length(r, &x.PieceTintColours)
+	SliceUint32Length(r, &x.PieceTintColors)
 	if err := x.validate(); err != nil {
-		r.InvalidValue(fmt.Sprintf("Skin %v", x.SkinID), "serialised skin", err.Error())
+		r.InvalidValue(fmt.Sprintf("Skin %v", x.SkinID), "serialized skin", err.Error())
 	}
 	r.Bool(&x.PremiumSkin)
 	r.Bool(&x.PersonaSkin)
@@ -199,27 +199,27 @@ func (x *PersonaPiece) Marshal(r IO) {
 	r.String(&x.ProductID)
 }
 
-// PersonaPieceTintColour describes the tint colours of a specific piece of a persona skin.
-type PersonaPieceTintColour struct {
-	// PieceType is the type of the persona skin piece that this tint colour concerns. The piece type must
-	// always be present in the persona pieces list, but not each piece type has a tint colour sent.
-	// Pieces that do have a tint colour that I was able to find immediately are listed below.
+// PersonaPieceTintColor describes the tint colors of a specific piece of a persona skin.
+type PersonaPieceTintColor struct {
+	// PieceType is the type of the persona skin piece that this tint color concerns. The piece type must
+	// always be present in the persona pieces list, but not each piece type has a tint color sent.
+	// Pieces that do have a tint color that I was able to find immediately are listed below.
 	// - persona_mouth
 	// - persona_eyes
 	// - persona_hair
 	PieceType string
-	// Colours is a list four colours written in hex notation (note, that unlike the SkinColour field in
+	// Colors is a list four colors written in hex notation (note, that unlike the SkinColor field in
 	// the ClientData struct, this is actually ARGB, not just RGB).
-	// The colours refer to different parts of the skin piece. The 'persona_eyes' may have the following
-	// colours: ["#ffa12722","#ff2f1f0f","#ff3aafd9","#0"]
-	// The first hex colour represents the tint colour of the iris, the second hex colour represents the
+	// The colors refer to different parts of the skin piece. The 'persona_eyes' may have the following
+	// colors: ["#ffa12722","#ff2f1f0f","#ff3aafd9","#0"]
+	// The first hex color represents the tint color of the iris, the second hex color represents the
 	// eyebrows and the third represents the sclera. The fourth is #0 because there are only 3 parts of the
 	// persona_eyes skin piece.
-	Colours []string
+	Colors []string
 }
 
-// Marshal encodes/decodes a PersonaPieceTintColour.
-func (x *PersonaPieceTintColour) Marshal(r IO) {
+// Marshal encodes/decodes a PersonaPieceTintColor.
+func (x *PersonaPieceTintColor) Marshal(r IO) {
 	r.String(&x.PieceType)
-	FuncSliceUint32Length(r, &x.Colours, r.String)
+	FuncSliceUint32Length(r, &x.Colors, r.String)
 }

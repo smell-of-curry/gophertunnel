@@ -4,13 +4,14 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"github.com/sandertv/gophertunnel/minecraft/protocol"
-	"golang.org/x/text/language"
 	"net"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/google/uuid"
+	"github.com/sandertv/gophertunnel/minecraft/protocol"
+	"golang.org/x/text/language"
 )
 
 // IdentityData contains identity data of the player logged in. It is found in one of the JWT claims signed
@@ -43,10 +44,10 @@ var checkUsername = regexp.MustCompile("[A-Za-z0-9 ]").MatchString
 // invalid.
 func (data IdentityData) Validate() error {
 	if _, err := strconv.ParseInt(data.XUID, 10, 64); err != nil && len(data.XUID) != 0 {
-		return fmt.Errorf("XUID must be parseable as an int64, but got %v", data.XUID)
+		return fmt.Errorf("XUID must be parsable as an int64, but got %v", data.XUID)
 	}
 	if id, err := uuid.Parse(data.Identity); err != nil || id == uuid.Nil {
-		return fmt.Errorf("UUID must be parseable as a valid UUID, but got %v", data.Identity)
+		return fmt.Errorf("UUID must be parsable as a valid UUID, but got %v", data.Identity)
 	}
 	if len(data.DisplayName) == 0 || len(data.DisplayName) > 15 {
 		return fmt.Errorf("DisplayName must not be empty or longer than 15 characters, but got %v characters", len(data.DisplayName))
@@ -133,7 +134,7 @@ type ClientData struct {
 	// TODO: Find out what value SkinAnimationData holds and when it does hold something.
 	SkinAnimationData string
 	// SkinData is a base64 encoded byte slice of 64*32*4, 64*64*4 or 128*128*4 bytes. It is a RGBA ordered
-	// byte representation of the skin colours.
+	// byte representation of the skin colors.
 	SkinData string
 	// SkinGeometry is a base64 JSON encoded structure of the geometry data of a skin, containing properties
 	// such as bones, uv, pivot etc.
@@ -164,17 +165,17 @@ type ClientData struct {
 	// A skin resource patch must be present at all times. The minimum required data that the field must hold
 	// is {"geometry": {"default": "geometry.persona_d1625e47f4c9399f_0_1"}}
 	SkinResourcePatch string
-	// SkinColour is a hex representation (including #) of the base colour of the skin. An example of the
-	// colour sent here is '#b37b62'.
-	SkinColour string `json:"SkinColor"`
+	// SkinColor is a hex representation (including #) of the base color of the skin. An example of the
+	// color sent here is '#b37b62'.
+	SkinColor string `json:"SkinColor"`
 	// ArmSize is the size of the arms of the player's model. This is either 'wide' (generally for male skins)
 	// or 'slim' (generally for female skins).
 	ArmSize string
 	// PersonaPieces is a list of all persona pieces that the skin is composed of.
 	PersonaPieces []PersonaPiece
-	// PieceTintColours is a list of specific tint colours for (some of) the persona pieces found in the list
+	// PieceTintColors is a list of specific tint colors for (some of) the persona pieces found in the list
 	// above.
-	PieceTintColours []PersonaPieceTintColour `json:"PieceTintColors"`
+	PieceTintColors []PersonaPieceTintColor `json:"PieceTintColors"`
 	// ThirdPartyName is the username of the player. This username should not be used however. The DisplayName
 	// sent in the IdentityData should be preferred over this.
 	ThirdPartyName string
@@ -221,19 +222,19 @@ type PersonaPiece struct {
 	ProductID string `json:"ProductId"`
 }
 
-// PersonaPieceTintColour describes the tint colours of a specific piece of a persona skin.
-type PersonaPieceTintColour struct {
-	// Colours is an array of four colours written in hex notation (note, that unlike the SkinColor field in
+// PersonaPieceTintColor describes the tint colors of a specific piece of a persona skin.
+type PersonaPieceTintColor struct {
+	// Colors is an array of four colors written in hex notation (note, that unlike the SkinColor field in
 	// the ClientData struct, this is actually ARGB, not just RGB).
-	// The colours refer to different parts of the skin piece. The 'persona_eyes' may have the following
-	// colours: ["#ffa12722","#ff2f1f0f","#ff3aafd9","#0"]
-	// The first hex colour represents the tint colour of the iris, the second hex colour represents the
+	// The colors refer to different parts of the skin piece. The 'persona_eyes' may have the following
+	// colors: ["#ffa12722","#ff2f1f0f","#ff3aafd9","#0"]
+	// The first hex color represents the tint color of the iris, the second hex color represents the
 	// eyebrows and the third represents the sclera. The fourth is #0 because there are only 3 parts of the
 	// persona_eyes skin piece.
-	Colours [4]string `json:"Colors"`
-	// PieceType is the type of the persona skin piece that this tint colour concerns. The piece type must
-	// always be present in the persona pieces list, but not each piece type has a tint colour sent.
-	// Pieces that do have a tint colour that I was able to find immediately are listed below.
+	Colors [4]string `json:"Colors"`
+	// PieceType is the type of the persona skin piece that this tint color concerns. The piece type must
+	// always be present in the persona pieces list, but not each piece type has a tint color sent.
+	// Pieces that do have a tint color that I was able to find immediately are listed below.
 	// - persona_mouth
 	// - persona_eyes
 	// - persona_hair
@@ -285,16 +286,16 @@ func (data ClientData) Validate() error {
 		return fmt.Errorf("LanguageCode must be a valid BCP-47 ISO language code, but got %v", data.LanguageCode)
 	}
 	if _, err := uuid.Parse(data.PlatformOfflineID); err != nil && len(data.PlatformOfflineID) != 0 {
-		return fmt.Errorf("PlatformOfflineID must be parseable as a valid UUID or empty, but got %v", data.PlatformOfflineID)
+		return fmt.Errorf("PlatformOfflineID must be parsable as a valid UUID or empty, but got %v", data.PlatformOfflineID)
 	}
 	if _, err := strconv.ParseUint(data.PlatformOnlineID, 10, 64); err != nil && len(data.PlatformOnlineID) != 0 {
-		return fmt.Errorf("PlatformOnlineID must be parseable as an int64 or empty, but got %v", data.PlatformOnlineID)
+		return fmt.Errorf("PlatformOnlineID must be parsable as an int64 or empty, but got %v", data.PlatformOnlineID)
 	}
 	if _, err := uuid.Parse(data.SelfSignedID); err != nil {
-		return fmt.Errorf("SelfSignedID must be parseable as a valid UUID, but got %v", data.SelfSignedID)
+		return fmt.Errorf("SelfSignedID must be parsable as a valid UUID, but got %v", data.SelfSignedID)
 	}
 	if _, err := net.ResolveUDPAddr("udp", data.ServerAddress); err != nil {
-		return fmt.Errorf("ServerAddress must be resolveable as a UDP address, but got %v", data.ServerAddress)
+		return fmt.Errorf("ServerAddress must be resolvable as a UDP address, but got %v", data.ServerAddress)
 	}
 	if err := base64DecLength(data.SkinData, data.SkinImageHeight*data.SkinImageWidth*4); err != nil {
 		return fmt.Errorf("SkinData is invalid: %w", err)

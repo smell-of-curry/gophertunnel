@@ -25,7 +25,7 @@ type MobArmourEquipment struct {
 
 // ID ...
 func (*MobArmourEquipment) ID() uint32 {
-	return IDMobArmourEquipment
+	return IDMobArmorEquipment
 }
 
 func (pk *MobArmourEquipment) Marshal(io protocol.IO) {

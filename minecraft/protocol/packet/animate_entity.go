@@ -31,7 +31,7 @@ type AnimateEntity struct {
 
 // ID ...
 func (*AnimateEntity) ID() uint32 {
-	return IDAnimateEntity
+	return IDTriggerAnimation
 }
 
 func (pk *AnimateEntity) Marshal(io protocol.IO) {

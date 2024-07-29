@@ -29,7 +29,7 @@ type MoveActorAbsolute struct {
 
 // ID ...
 func (*MoveActorAbsolute) ID() uint32 {
-	return IDMoveActorAbsolute
+	return IDMoveAbsoluteActor
 }
 
 func (pk *MoveActorAbsolute) Marshal(io protocol.IO) {

@@ -158,7 +158,7 @@ func lookupEventType(x Event, eventType *int32) bool {
 // Event represents an object that holds data specific to an event.
 // The data it holds depends on the type.
 type Event interface {
-	// Marshal encodes/decodes a serialised event data object.
+	// Marshal encodes/decodes a serialized event data object.
 	Marshal(r IO)
 }
 
@@ -181,8 +181,8 @@ type EntityInteractEvent struct {
 	InteractionEntityType int32
 	// EntityVariant ...
 	EntityVariant int32
-	// EntityColour ...
-	EntityColour uint8
+	// EntityColor ...
+	EntityColor uint8
 }
 
 // Marshal ...
@@ -190,7 +190,7 @@ func (e *EntityInteractEvent) Marshal(r IO) {
 	r.Varint32(&e.InteractionType)
 	r.Varint32(&e.InteractionEntityType)
 	r.Varint32(&e.EntityVariant)
-	r.Uint8(&e.EntityColour)
+	r.Uint8(&e.EntityColor)
 }
 
 // PortalBuiltEvent is the event data sent when a portal is built.
@@ -248,8 +248,8 @@ func (m *MobKilledEvent) Marshal(r IO) {
 type CauldronUsedEvent struct {
 	// PotionID ...
 	PotionID int32
-	// Colour ...
-	Colour int32
+	// Color ...
+	Color int32
 	// FillLevel ...
 	FillLevel int32
 }
@@ -257,7 +257,7 @@ type CauldronUsedEvent struct {
 // Marshal ...
 func (c *CauldronUsedEvent) Marshal(r IO) {
 	r.Varint32(&c.PotionID)
-	r.Varint32(&c.Colour)
+	r.Varint32(&c.Color)
 	r.Varint32(&c.FillLevel)
 }
 
@@ -331,8 +331,8 @@ type PatternRemovedEvent struct {
 	PatternsSize int32
 	// PatternIndex ...
 	PatternIndex int32
-	// PatternColour ...
-	PatternColour int32
+	// PatternColor ...
+	PatternColor int32
 }
 
 // Marshal ...
@@ -341,7 +341,7 @@ func (p *PatternRemovedEvent) Marshal(r IO) {
 	r.Varint32(&p.AuxValue)
 	r.Varint32(&p.PatternsSize)
 	r.Varint32(&p.PatternIndex)
-	r.Varint32(&p.PatternColour)
+	r.Varint32(&p.PatternColor)
 }
 
 // SlashCommandExecutedEvent is the event data sent when a slash command is executed.
@@ -390,15 +390,15 @@ type MobBornEvent struct {
 	EntityType int32
 	// Variant ...
 	Variant int32
-	// Colour ...
-	Colour uint8
+	// Color ...
+	Color uint8
 }
 
 // Marshal ...
 func (m *MobBornEvent) Marshal(r IO) {
 	r.Varint32(&m.EntityType)
 	r.Varint32(&m.Variant)
-	r.Uint8(&m.Colour)
+	r.Uint8(&m.Color)
 }
 
 // PetDiedEvent is the event data sent when a pet dies. This is now deprecated.
@@ -547,14 +547,14 @@ type ExtractHoneyEvent struct{}
 func (*ExtractHoneyEvent) Marshal(IO) {}
 
 const (
-	WaxNotOxidised   = uint16(0xa609)
+	WaxNotOxidized   = uint16(0xa609)
 	WaxExposed       = uint16(0xa809)
 	WaxWeathered     = uint16(0xaa09)
-	WaxOxidised      = uint16(0xac09)
-	UnWaxNotOxidised = uint16(0xae09)
+	WaxOxidized      = uint16(0xac09)
+	UnWaxNotOxidized = uint16(0xae09)
 	UnWaxExposed     = uint16(0xb009)
 	UnWaxWeathered   = uint16(0xb209)
-	UnWaxOxidised    = uint16(0xfa0a)
+	UnWaxOxidized    = uint16(0xfa0a)
 )
 
 // WaxedOrUnwaxedCopperEvent is an event sent by the server when a copper block is waxed or unwaxed.

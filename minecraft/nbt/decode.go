@@ -76,7 +76,7 @@ func (d *Decoder) Decode(v any) error {
 // Unmarshal returns an error if the data is decoded into a struct and the struct does not have all fields
 // that the matching TAG_Compound in the NBT has, in order to prevent the loss of data. For varying data, the
 // data should be decoded into a map.
-// Nil maps and slices are initialised and filled out automatically by Unmarshal.
+// Nil maps and slices are initialized and filled out automatically by Unmarshal.
 //
 // Unmarshal accepts struct fields with the 'nbt' struct tag. The 'nbt' struct tag allows setting the name of
 // a field that some tag should be decoded in. Setting the struct tag to '-' means that field will never be
@@ -96,7 +96,7 @@ func UnmarshalEncoding(data []byte, v any, encoding Encoding) error {
 	}}).Decode(v)
 }
 
-// These types are initialised once and re-used for each Unmarshal call.
+// These types are initialized once and re-used for each Unmarshal call.
 var stringType = reflect.TypeOf("")
 var byteType = reflect.TypeOf(byte(0))
 var int32Type = reflect.TypeOf(int32(0))

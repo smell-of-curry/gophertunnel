@@ -54,7 +54,7 @@ type MobEffect struct {
 	EffectType int32
 	// Amplifier is the amplifier of the effect. Take note that the amplifier is not the same as the effect's
 	// level. The level is usually one higher than the amplifier, and the amplifier can actually be negative
-	// to reverse the behaviour effect.
+	// to reverse the behavior effect.
 	Amplifier int32
 	// Particles specifies if viewers of the entity that gets the effect shows particles around it. If set to
 	// false, no particles are emitted around the entity.

@@ -1,7 +1,8 @@
 package packet
 
 const (
-	IDLogin = iota + 1
+	IDKeepAlive = iota
+	IDLogin
 	IDPlayStatus
 	IDServerToClientHandshake
 	IDClientToServerHandshake
@@ -16,29 +17,31 @@ const (
 	IDAddActor
 	IDRemoveActor
 	IDAddItemActor
-	_
+	IDServerPlayerPostMovePosition
 	IDTakeItemActor
-	IDMoveActorAbsolute
+	IDMoveAbsoluteActor
 	IDMovePlayer
 	IDPassengerJump
 	IDUpdateBlock
 	IDAddPainting
+	// Deprecated: IDTickSync is deprecated.
 	IDTickSync
-	_
+	IDLevelSoundEventV1
 	IDLevelEvent
-	IDBlockEvent
+	IDTileEvent
 	IDActorEvent
 	IDMobEffect
 	IDUpdateAttributes
 	IDInventoryTransaction
-	IDMobEquipment
-	IDMobArmourEquipment
+	IDPlayerEquipment
+	IDMobArmorEquipment
 	IDInteract
 	IDBlockPickRequest
 	IDActorPickRequest
 	IDPlayerAction
-	_
-	IDHurtArmour
+	// Deprecated: IDActorFall is deprecated.
+	IDActorFall
+	IDHurtArmor
 	IDSetActorData
 	IDSetActorMotion
 	IDSetActorLink
@@ -48,30 +51,33 @@ const (
 	IDRespawn
 	IDContainerOpen
 	IDContainerClose
-	IDPlayerHotBar
+	IDPlayerHotbar
 	IDInventoryContent
 	IDInventorySlot
 	IDContainerSetData
 	IDCraftingData
-	_
-	IDGUIDataPickItem
+	// Deprecated: IDCraftingEvent is deprecated.
+	IDCraftingEvent
+	IDGuiDataPickItem
+	// Deprecated: IDAdventureSettings is deprecated.
 	IDAdventureSettings
 	IDBlockActorData
 	IDPlayerInput
-	IDLevelChunk
+	IDFullChunkData
 	IDSetCommandsEnabled
 	IDSetDifficulty
 	IDChangeDimension
 	IDSetPlayerGameType
 	IDPlayerList
 	IDSimpleEvent
-	IDEvent
+	IDLegacyTelemetryEvent
 	IDSpawnExperienceOrb
-	IDClientBoundMapItemData
+	IDMapData
 	IDMapInfoRequest
 	IDRequestChunkRadius
 	IDChunkRadiusUpdated
-	_
+	// Deprecated: IDItemFrameDropItem is deprecated.
+	IDItemFrameDropItem
 	IDGameRulesChanged
 	IDCamera
 	IDBossEvent
@@ -89,18 +95,18 @@ const (
 	IDPlaySound
 	IDStopSound
 	IDSetTitle
-	IDAddBehaviourTree
+	IDAddBehaviorTree
 	IDStructureBlockUpdate
 	IDShowStoreOffer
 	IDPurchaseReceipt
 	IDPlayerSkin
-	IDSubClientLogin
+	IDSubclientLogin
 	IDAutomationClientConnect
 	IDSetLastHurtBy
 	IDBookEdit
 	IDNPCRequest
 	IDPhotoTransfer
-	IDModalFormRequest
+	IDShowModalForm
 	IDModalFormResponse
 	IDServerSettingsRequest
 	IDServerSettingsResponse
@@ -111,35 +117,38 @@ const (
 	IDSetScore
 	IDLabTable
 	IDUpdateBlockSynced
-	IDMoveActorDelta
+	IDMoveDeltaActor
 	IDSetScoreboardIdentity
-	IDSetLocalPlayerAsInitialised
+	IDSetLocalPlayerAsInit
 	IDUpdateSoftEnum
-	IDNetworkStackLatency
-	_
+	IDPing
+	IDBlockPalette
 	IDScriptCustomEvent
 	IDSpawnParticleEffect
-	IDAvailableActorIdentifiers
-	_
+	IDAvailableActorIDList
+	IDLevelSoundEventV2
 	IDNetworkChunkPublisherUpdate
 	IDBiomeDefinitionList
 	IDLevelSoundEvent
 	IDLevelEventGeneric
 	IDLecternUpdate
-	_
-	_
-	_
+	// Deprecated: IDVideoStreamConnect is deprecated.
+	IDVideoStreamConnect
+	// Deprecated: IDAddEntity is deprecated.
+	IDAddEntity
+	// Deprecated: IDRemoveEntity is deprecated.
+	IDRemoveEntity
 	IDClientCacheStatus
 	IDOnScreenTextureAnimation
 	IDMapCreateLockedCopy
-	IDStructureTemplateDataRequest
-	IDStructureTemplateDataResponse
-	_
+	IDStructureTemplateDataExportRequest
+	IDStructureTemplateDataExportResponse
+	_ // Marked as Unused
 	IDClientCacheBlobStatus
 	IDClientCacheMissResponse
 	IDEducationSettings
 	IDEmote
-	IDMultiPlayerSettings
+	IDMultiplayerSettings
 	IDSettingsCommand
 	IDAnvilDamage
 	IDCompletedUsingItem
@@ -149,7 +158,7 @@ const (
 	IDPlayerEnchantOptions
 	IDItemStackRequest
 	IDItemStackResponse
-	IDPlayerArmourDamage
+	IDPlayerArmorDamage
 	IDCodeBuilder
 	IDUpdatePlayerGameType
 	IDEmoteList
@@ -158,25 +167,27 @@ const (
 	IDDebugInfo
 	IDPacketViolationWarning
 	IDMotionPredictionHints
-	IDAnimateEntity
+	IDTriggerAnimation
 	IDCameraShake
-	IDPlayerFog
+	IDPlayerFogSetting
 	IDCorrectPlayerMovePrediction
 	IDItemComponent
+	// Deprecated: IDFilterText is deprecated.
 	IDFilterText
 	IDClientBoundDebugRenderer
 	IDSyncActorProperty
 	IDAddVolumeEntity
 	IDRemoveVolumeEntity
 	IDSimulationType
-	IDNPCDialogue
-	IDEducationResourceURI
+	IDNpcDialogue
+	IDEduUriResource
 	IDCreatePhoto
 	IDUpdateSubChunkBlocks
+	// Deprecated: IDPhotoInfoRequest is deprecated.
 	IDPhotoInfoRequest
 	IDSubChunk
 	IDSubChunkRequest
-	IDClientStartItemCooldown
+	IDPlayerStartItemCooldown
 	IDScriptMessage
 	IDCodeBuilderSource
 	IDTickingAreasLoadStatus
@@ -196,7 +207,8 @@ const (
 	IDRequestNetworkSettings
 	IDGameTestRequest
 	IDGameTestResults
-	IDUpdateClientInputLocks
+	IDPlayerClientInputPermissions
+	// Deprecated: IDClientCheatAbility is deprecated.
 	IDClientCheatAbility
 	IDCameraPresets
 	IDUnlockedRecipes

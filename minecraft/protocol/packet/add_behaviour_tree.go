@@ -4,18 +4,18 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 )
 
-// AddBehaviourTree is sent by the server to the client. The packet is currently unused by both client and
+// AddBehaviorTree is sent by the server to the client. The packet is currently unused by both client and
 // server.
-type AddBehaviourTree struct {
-	// BehaviourTree is an unused string.
-	BehaviourTree string
+type AddBehaviorTree struct {
+	// BehaviorTree is a stringified JSON behavior file for a behavior tree.
+	BehaviorTreeStructure string
 }
 
 // ID ...
-func (*AddBehaviourTree) ID() uint32 {
-	return IDAddBehaviourTree
+func (*AddBehaviorTree) ID() uint32 {
+	return IDAddBehaviorTree
 }
 
-func (pk *AddBehaviourTree) Marshal(io protocol.IO) {
-	io.String(&pk.BehaviourTree)
+func (pk *AddBehaviorTree) Marshal(io protocol.IO) {
+	io.String(&pk.BehaviorTreeStructure)
 }

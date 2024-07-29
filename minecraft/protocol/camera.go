@@ -1,8 +1,9 @@
 package protocol
 
 import (
-	"github.com/go-gl/mathgl/mgl32"
 	"image/color"
+
+	"github.com/go-gl/mathgl/mgl32"
 )
 
 const (
@@ -103,19 +104,19 @@ func (x *CameraFadeTimeData) Marshal(r IO) {
 	r.Float32(&x.FadeOutDuration)
 }
 
-// CameraInstructionFade represents a camera instruction that fades the screen to a specified colour.
+// CameraInstructionFade represents a camera instruction that fades the screen to a specified color.
 type CameraInstructionFade struct {
 	// TimeData is the time data for the fade, which includes the fade in duration, wait duration and fade out
 	// duration.
 	TimeData Optional[CameraFadeTimeData]
-	// Colour is the colour of the screen to fade to. This only uses the red, green and blue components.
-	Colour Optional[color.RGBA]
+	// Color is the color of the screen to fade to. This only uses the red, green and blue components.
+	Color Optional[color.RGBA]
 }
 
 // Marshal encodes/decodes a CameraInstructionFade.
 func (x *CameraInstructionFade) Marshal(r IO) {
 	OptionalMarshaler(r, &x.TimeData)
-	OptionalFunc(r, &x.Colour, r.RGB)
+	OptionalFunc(r, &x.Color, r.RGB)
 }
 
 // CameraPreset represents a basic preset that can be extended upon by more complex instructions.

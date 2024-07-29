@@ -1,8 +1,9 @@
 package protocol
 
 import (
-	"github.com/google/uuid"
 	"math"
+
+	"github.com/google/uuid"
 )
 
 // Command holds the data that a command requires to be shown to a player client-side. The command is shown in
@@ -294,8 +295,8 @@ func CommandOriginData(r IO, x *CommandOrigin) {
 // executed.
 type CommandOutputMessage struct {
 	// Success indicates if the output message was one of a successful command execution. If set to true, the
-	// output message is by default coloured white, whereas if set to false, the message is by default
-	// coloured red.
+	// output message is by default colored white, whereas if set to false, the message is by default
+	// colored red.
 	Success bool
 	// Message is the message that is sent to the client in the chat window. It may either be simply a
 	// message or a translated built-in string like 'commands.tp.success.coordinates', combined with specific

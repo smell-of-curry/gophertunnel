@@ -9,7 +9,7 @@ import (
 // specifically at the start of the game, such as the position of the player, the game mode, etc.
 type GameData struct {
 	// WorldName is the name of the world that the player spawns in. This name will be displayed at the top of
-	// the player list when opening the in-game menu. It may contain colour codes and does not have to be an
+	// the player list when opening the in-game menu. It may contain color codes and does not have to be an
 	// actual world name, but instead, can be the server name.
 	// If WorldName is left empty, the name of the Listener will be used to show above the player list
 	// in-game.

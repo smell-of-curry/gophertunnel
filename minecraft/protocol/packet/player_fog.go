@@ -14,7 +14,7 @@ type PlayerFog struct {
 
 // ID ...
 func (*PlayerFog) ID() uint32 {
-	return IDPlayerFog
+	return IDPlayerFogSetting
 }
 
 func (pk *PlayerFog) Marshal(io protocol.IO) {

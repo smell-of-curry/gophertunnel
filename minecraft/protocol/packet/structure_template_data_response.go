@@ -29,7 +29,7 @@ type StructureTemplateDataResponse struct {
 
 // ID ...
 func (pk *StructureTemplateDataResponse) ID() uint32 {
-	return IDStructureTemplateDataResponse
+	return IDStructureTemplateDataExportResponse
 }
 
 func (pk *StructureTemplateDataResponse) Marshal(io protocol.IO) {

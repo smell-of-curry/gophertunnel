@@ -34,8 +34,8 @@ type UpdateTrade struct {
 	// demand for the item. (A mechanic added in 1.11.) Buying more of the same item will increase the price
 	// of that particular item.
 	DemandBasedPrices bool
-	// SerialisedOffers is a network NBT serialised compound of offers that the villager has.
-	SerialisedOffers []byte
+	// SerializedOffers is a network NBT serialized compound of offers that the villager has.
+	SerializedOffers []byte
 }
 
 // ID ...
@@ -53,5 +53,5 @@ func (pk *UpdateTrade) Marshal(io protocol.IO) {
 	io.String(&pk.DisplayName)
 	io.Bool(&pk.NewTradeUI)
 	io.Bool(&pk.DemandBasedPrices)
-	io.Bytes(&pk.SerialisedOffers)
+	io.Bytes(&pk.SerializedOffers)
 }

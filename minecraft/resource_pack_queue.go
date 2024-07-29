@@ -3,6 +3,7 @@ package minecraft
 import (
 	"bytes"
 	"fmt"
+
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 	"github.com/sandertv/gophertunnel/minecraft/resource"
 )
@@ -66,10 +67,10 @@ func (queue *resourcePackQueue) NextPack() (pk *packet.ResourcePackDataInfo, ok 
 		switch {
 		case pack.HasWorldTemplate():
 			packType = packet.ResourcePackTypeWorldTemplate
-		case pack.HasTextures() && (pack.HasBehaviours() || pack.HasScripts()):
+		case pack.HasTextures() && (pack.HasBehaviors() || pack.HasScripts()):
 			packType = packet.ResourcePackTypeAddon
-		case !pack.HasTextures() && (pack.HasBehaviours() || pack.HasScripts()):
-			packType = packet.ResourcePackTypeBehaviour
+		case !pack.HasTextures() && (pack.HasBehaviors() || pack.HasScripts()):
+			packType = packet.ResourcePackTypeBehavior
 		case pack.HasTextures():
 			packType = packet.ResourcePackTypeResources
 		default:

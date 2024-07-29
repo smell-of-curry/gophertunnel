@@ -8,10 +8,11 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"github.com/go-jose/go-jose/v3"
-	"github.com/go-jose/go-jose/v3/jwt"
 	"strings"
 	"time"
+
+	"github.com/go-jose/go-jose/v3"
+	"github.com/go-jose/go-jose/v3/jwt"
 )
 
 // chain holds a chain with claims, each with their own headers, payloads and signatures. Each claim holds
@@ -308,7 +309,7 @@ func (c identityClaims) Validate(e jwt.Expected) error {
 type identityPublicKeyClaims struct {
 	jwt.Claims
 
-	// IdentityPublicKey holds a serialised ecdsa.PublicKey used in the next JWT in the chain.
+	// IdentityPublicKey holds a serialized ecdsa.PublicKey used in the next JWT in the chain.
 	IdentityPublicKey    string `json:"identityPublicKey"`
 	CertificateAuthority bool   `json:"certificateAuthority,omitempty"`
 }

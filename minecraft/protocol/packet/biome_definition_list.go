@@ -8,9 +8,9 @@ import (
 // implemented on the server side. It is much like the AvailableActorIdentifiers packet, but instead
 // functions for biomes.
 type BiomeDefinitionList struct {
-	// SerialisedBiomeDefinitions is a network NBT serialised compound of all definitions of biomes that are
+	// SerializedBiomeDefinitions is a network NBT serialized compound of all definitions of biomes that are
 	// available on the server.
-	SerialisedBiomeDefinitions []byte
+	SerializedBiomeDefinitions []byte
 }
 
 // ID ...
@@ -19,5 +19,5 @@ func (*BiomeDefinitionList) ID() uint32 {
 }
 
 func (pk *BiomeDefinitionList) Marshal(io protocol.IO) {
-	io.Bytes(&pk.SerialisedBiomeDefinitions)
+	io.Bytes(&pk.SerializedBiomeDefinitions)
 }

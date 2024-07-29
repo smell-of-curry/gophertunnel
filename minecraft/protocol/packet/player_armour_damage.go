@@ -23,7 +23,7 @@ type PlayerArmourDamage struct {
 
 // ID ...
 func (pk *PlayerArmourDamage) ID() uint32 {
-	return IDPlayerArmourDamage
+	return IDPlayerArmorDamage
 }
 
 func (pk *PlayerArmourDamage) Marshal(io protocol.IO) {

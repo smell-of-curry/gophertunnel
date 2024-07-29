@@ -1,8 +1,9 @@
 package packet
 
 import (
-	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"image/color"
+
+	"github.com/sandertv/gophertunnel/minecraft/protocol"
 )
 
 const (
@@ -66,13 +67,13 @@ type ClientBoundMapItemData struct {
 	// YOffset is the Y offset in pixels at which the updated texture area starts. From this Y, the updated
 	// texture will extend exactly Height pixels up.
 	YOffset int32
-	// Pixels is a list of pixel colours for the new texture of the map. It is indexed as Pixels[y*height + x].
+	// Pixels is a list of pixel colors for the new texture of the map. It is indexed as Pixels[y*height + x].
 	Pixels []color.RGBA
 }
 
 // ID ...
 func (*ClientBoundMapItemData) ID() uint32 {
-	return IDClientBoundMapItemData
+	return IDMapData
 }
 
 func (pk *ClientBoundMapItemData) Marshal(io protocol.IO) {

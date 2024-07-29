@@ -5,12 +5,12 @@ import (
 )
 
 // LevelEventGeneric is sent by the server to send a 'generic' level event to the client. This packet sends an
-// NBT serialised object and may for that reason be used for any event holding additional data.
+// NBT serialized object and may for that reason be used for any event holding additional data.
 type LevelEventGeneric struct {
 	// EventID is a unique identifier that identifies the event called. The data that follows has fields in
 	// the NBT depending on what event it is.
 	EventID int32
-	// SerialisedEventData is a network little endian serialised object of event data, with fields that vary
+	// SerializedEventData is a network little endian serialized object of event data, with fields that vary
 	// depending on EventID.
 	// Unlike many other NBT structures, this data is not actually in a compound but just loosely floating
 	// NBT tags. To decode using the nbt package, you would need to append 0x0a00 at the start (compound id
@@ -80,7 +80,7 @@ type LevelEventGeneric struct {
 	// })
 	// The 'originX', 'originY' and 'originZ' fields are present in every event and serve as a replacement for
 	// a Position field in this packet.
-	SerialisedEventData []byte
+	SerializedEventData []byte
 }
 
 // ID ...
@@ -90,5 +90,5 @@ func (pk *LevelEventGeneric) ID() uint32 {
 
 func (pk *LevelEventGeneric) Marshal(io protocol.IO) {
 	io.Varint32(&pk.EventID)
-	io.Bytes(&pk.SerialisedEventData)
+	io.Bytes(&pk.SerializedEventData)
 }

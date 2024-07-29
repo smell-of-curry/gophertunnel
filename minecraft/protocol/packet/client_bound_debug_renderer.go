@@ -18,13 +18,13 @@ type ClientBoundDebugRenderer struct {
 	Text string
 	// Position is the position to spawn the debug on.
 	Position mgl32.Vec3
-	// Red is the red value from the RGBA colour rendered on the debug. This value is in the range 0-1.
+	// Red is the red value from the RGBA color rendered on the debug. This value is in the range 0-1.
 	Red float32
-	// Green is the green value from the RGBA colour rendered on the debug. This value is in the range 0-1.
+	// Green is the green value from the RGBA color rendered on the debug. This value is in the range 0-1.
 	Green float32
-	// Blue is the blue value from the RGBA colour rendered on the debug. This value is in the range 0-1.
+	// Blue is the blue value from the RGBA color rendered on the debug. This value is in the range 0-1.
 	Blue float32
-	// Alpha is the alpha value from the RGBA colour rendered on the debug. This value is in the range 0-1.
+	// Alpha is the alpha value from the RGBA color rendered on the debug. This value is in the range 0-1.
 	Alpha float32
 	// Duration is how long the debug will last in the world for. It is measured in milliseconds.
 	Duration uint64

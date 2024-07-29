@@ -17,7 +17,7 @@ const (
 	TeleportCauseProjectile
 	TeleportCauseChorusFruit
 	TeleportCauseCommand
-	TeleportCauseBehaviour
+	TeleportCauseBehavior
 )
 
 // MovePlayer is sent by players to send their movement to the server, and by the server to update the

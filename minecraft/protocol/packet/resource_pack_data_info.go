@@ -9,7 +9,7 @@ const (
 	ResourcePackTypeAddon = iota + 1
 	ResourcePackTypeCached
 	ResourcePackTypeCopyProtected
-	ResourcePackTypeBehaviour
+	ResourcePackTypeBehavior
 	ResourcePackTypePersonaPiece
 	ResourcePackTypeResources
 	ResourcePackTypeSkins

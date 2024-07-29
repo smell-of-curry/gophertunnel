@@ -11,7 +11,7 @@ type TrimData struct {
 	// defined through resource packs.
 	Patterns []protocol.TrimPattern
 	// Materials is a list of materials that can be applied to armour. These are mostly different ores that have different
-	// colours for more customization.
+	// colors for more customization.
 	Materials []protocol.TrimMaterial
 }
 

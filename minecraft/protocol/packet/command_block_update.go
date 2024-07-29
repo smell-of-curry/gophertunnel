@@ -26,7 +26,7 @@ type CommandBlockUpdate struct {
 	// NeedsRedstone specifies if the command block needs to be powered by redstone to be activated. If false,
 	// the command block is always active. The field is only set if Block is set to true.
 	NeedsRedstone bool
-	// Conditional specifies the behaviour of the command block if the command block before it (the opposite
+	// Conditional specifies the behavior of the command block if the command block before it (the opposite
 	// side of the direction the arrow if facing) fails to execute. If set to false, it will activate at all
 	// times, whereas if set to true, it will activate only if the previous command block executed
 	// successfully. The field is only set if Block is set to true.

@@ -35,16 +35,16 @@ type LevelChunk struct {
 	// of the chunk.
 	// If CacheEnabled is set to false, BlobHashes can be left empty.
 	BlobHashes []uint64
-	// RawPayload is a serialised string of chunk data. The data held depends on if CacheEnabled is set to
+	// RawPayload is a serialized string of chunk data. The data held depends on if CacheEnabled is set to
 	// true. If set to false, the payload is composed of multiple sub-chunks, each of which carry a version
-	// which indicates the way they are serialised, followed by biomes, border blocks and tile entities. If
+	// which indicates the way they are serialized, followed by biomes, border blocks and tile entities. If
 	// CacheEnabled is true, the payload consists out of the border blocks and tile entities only.
 	RawPayload []byte
 }
 
 // ID ...
 func (*LevelChunk) ID() uint32 {
-	return IDLevelChunk
+	return IDFullChunkData
 }
 
 func (pk *LevelChunk) Marshal(io protocol.IO) {

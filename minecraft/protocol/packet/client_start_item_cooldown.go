@@ -14,7 +14,7 @@ type ClientStartItemCooldown struct {
 
 // ID ...
 func (*ClientStartItemCooldown) ID() uint32 {
-	return IDClientStartItemCooldown
+	return IDPlayerStartItemCooldown
 }
 
 func (pk *ClientStartItemCooldown) Marshal(io protocol.IO) {

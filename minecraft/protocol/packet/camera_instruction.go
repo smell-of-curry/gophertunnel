@@ -10,7 +10,7 @@ type CameraInstruction struct {
 	Set protocol.Optional[protocol.CameraInstructionSet]
 	// Clear can be set to true to clear all the current camera instructions.
 	Clear protocol.Optional[bool]
-	// Fade is a camera instruction that fades the screen to a specified colour.
+	// Fade is a camera instruction that fades the screen to a specified color.
 	Fade protocol.Optional[protocol.CameraInstructionFade]
 }
 

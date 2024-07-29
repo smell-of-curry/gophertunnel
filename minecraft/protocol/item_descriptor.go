@@ -49,7 +49,7 @@ func (x *DefaultItemDescriptor) Marshal(r IO) {
 	}
 }
 
-// MoLangItemDescriptor represents an item descriptor for items that use MoLang (e.g. behaviour packs).
+// MoLangItemDescriptor represents an item descriptor for items that use MoLang (e.g. behavior packs).
 type MoLangItemDescriptor struct {
 	// Expression represents the MoLang expression used to identify the item/it's associated tag.
 	Expression string
@@ -63,7 +63,7 @@ func (x *MoLangItemDescriptor) Marshal(r IO) {
 	r.Uint8(&x.Version)
 }
 
-// ItemTagItemDescriptor represents an item descriptor that uses item tagging. This should be used to reduce duplicative
+// ItemTagItemDescriptor represents an item descriptor that uses item tagging. This should be used to reduce duplication
 // entries for items that can be grouped under a single tag.
 type ItemTagItemDescriptor struct {
 	// Tag represents the tag that the item is part of.

@@ -9,15 +9,15 @@ import (
 type AddVolumeEntity struct {
 	// EntityRuntimeID is the runtime ID of the volume. The runtime ID is unique for each world session, and
 	// entities are generally identified in packets using this runtime ID.
-	EntityRuntimeID uint64
-	// EntityMetadata is a map of entity metadata, which includes flags and data properties that alter in
+	EntityNetworkID uint64
+	// Components is a map of entity metadata, which includes flags and data properties that alter in
 	// particular the way the volume functions or looks.
-	EntityMetadata map[string]any
-	// EncodingIdentifier is the unique identifier for the volume. It must be of the form 'namespace:name', where
+	Components map[string]any
+	// JSONIdentifier is the unique identifier for the volume. It must be of the form 'namespace:name', where
 	// namespace cannot be 'minecraft'.
-	EncodingIdentifier string
-	// InstanceIdentifier is the identifier of a fog definition.
-	InstanceIdentifier string
+	JSONIdentifier string
+	// InstanceName is the identifier of a fog definition.
+	InstanceName string
 	// Bounds represent the volume's bounds. The first value is the minimum bounds, and the second value is the
 	// maximum bounds.
 	Bounds [2]protocol.BlockPos
@@ -33,10 +33,10 @@ func (*AddVolumeEntity) ID() uint32 {
 }
 
 func (pk *AddVolumeEntity) Marshal(io protocol.IO) {
-	io.Uint64(&pk.EntityRuntimeID)
-	io.NBT(&pk.EntityMetadata, nbt.NetworkLittleEndian)
-	io.String(&pk.EncodingIdentifier)
-	io.String(&pk.InstanceIdentifier)
+	io.Uint64(&pk.EntityNetworkID)
+	io.NBT(&pk.Components, nbt.NetworkLittleEndian)
+	io.String(&pk.JSONIdentifier)
+	io.String(&pk.InstanceName)
 	io.UBlockPos(&pk.Bounds[0])
 	io.UBlockPos(&pk.Bounds[1])
 	io.Varint32(&pk.Dimension)

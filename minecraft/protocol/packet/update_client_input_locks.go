@@ -23,7 +23,7 @@ type UpdateClientInputLocks struct {
 
 // ID ...
 func (pk *UpdateClientInputLocks) ID() uint32 {
-	return IDUpdateClientInputLocks
+	return IDPlayerClientInputPermissions
 }
 
 func (pk *UpdateClientInputLocks) Marshal(io protocol.IO) {

@@ -1,8 +1,8 @@
 package protocol
 
-// EntityProperties holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
+// PropertySyncData holds lists of entity properties that define specific attributes of an entity. As of v1.19.40, the
 // vanilla server does not use these properties, however they are still supported by the protocol.
-type EntityProperties struct {
+type PropertySyncData struct {
 	// IntegerProperties is a list of entity properties that contain integer values.
 	IntegerProperties []IntegerEntityProperty
 	// FloatProperties is a list of entity properties that contain float values.
@@ -10,7 +10,7 @@ type EntityProperties struct {
 }
 
 // Marshal ...
-func (e EntityProperties) Marshal(r IO) {
+func (e PropertySyncData) Marshal(r IO) {
 	Slice(r, &e.IntegerProperties)
 	Slice(r, &e.FloatProperties)
 }

@@ -9,7 +9,7 @@ import (
 )
 
 // encrypt holds an encryption session with several fields required to encrypt and/or decrypt incoming
-// packets. It may be initialised using secret key bytes computed using the shared secret produced with a
+// packets. It may be initialized using secret key bytes computed using the shared secret produced with a
 // private and a public ECDSA key.
 type encrypt struct {
 	sendCounter uint64

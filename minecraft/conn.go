@@ -9,6 +9,14 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"io"
+	"log"
+	"net"
+	"strings"
+	"sync"
+	"sync/atomic"
+	"time"
+
 	"github.com/go-jose/go-jose/v3"
 	"github.com/go-jose/go-jose/v3/jwt"
 	"github.com/google/uuid"
@@ -19,13 +27,6 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 	"github.com/sandertv/gophertunnel/minecraft/resource"
 	"github.com/sandertv/gophertunnel/minecraft/text"
-	"io"
-	"log"
-	"net"
-	"strings"
-	"sync"
-	"sync/atomic"
-	"time"
 )
 
 // exemptedResourcePack is a resource pack that is exempted from being downloaded. These packs may be directly
@@ -81,7 +82,7 @@ type Conn struct {
 	// connection. It is otherwise left unused.
 	salt []byte
 
-	// packets is a channel of byte slices containing serialised packets that are coming in from the other
+	// packets is a channel of byte slices containing serialized packets that are coming in from the other
 	// side of the connection.
 	packets chan *packetData
 
@@ -209,7 +210,7 @@ func (conn *Conn) Authenticated() bool {
 	return conn.IdentityData().XUID != ""
 }
 
-// GameData returns specific game data set to the connection for the player to be initialised with. If the
+// GameData returns specific game data set to the connection for the player to be initialized with. If the
 // Conn is obtained using Listen, this game data may be set to the Listener. If obtained using Dial, the data
 // is obtained from the server.
 func (conn *Conn) GameData() GameData {
@@ -395,7 +396,7 @@ func (conn *Conn) ResourcePacks() []*resource.Pack {
 	return conn.resourcePacks
 }
 
-// Write writes a slice of serialised packet data to the Conn. The data is buffered until the next 20th of a
+// Write writes a slice of serialized packet data to the Conn. The data is buffered until the next 20th of a
 // tick, after which it is flushed to the connection. Write returns the amount of bytes written n.
 func (conn *Conn) Write(b []byte) (n int, err error) {
 	conn.sendMu.Lock()
@@ -553,7 +554,7 @@ func (conn *Conn) deferPacket(pk *packetData) {
 	conn.deferredPacketMu.Unlock()
 }
 
-// receive receives an incoming serialised packet from the underlying connection. If the connection is not yet
+// receive receives an incoming serialized packet from the underlying connection. If the connection is not yet
 // logged in, the packet is immediately handled.
 func (conn *Conn) receive(data []byte) error {
 	pkData, err := parseData(data, conn)
@@ -640,8 +641,8 @@ func (conn *Conn) handlePacket(pk packet.Packet) error {
 		return conn.handleResourcePackChunkRequest(pk)
 	case *packet.RequestChunkRadius:
 		return conn.handleRequestChunkRadius(pk)
-	case *packet.SetLocalPlayerAsInitialised:
-		return conn.handleSetLocalPlayerAsInitialised(pk)
+	case *packet.SetLocalPlayerAsInit:
+		return conn.handleSetLocalPlayerAsInitialized(pk)
 
 	// Internal packets destined for the client.
 	case *packet.NetworkSettings:
@@ -729,7 +730,7 @@ func (conn *Conn) handleLogin(pk *packet.Login) error {
 
 	// Make sure the player is logged in with XBOX Live when necessary.
 	if !authResult.XBOXLiveAuthenticated && conn.authEnabled {
-		_ = conn.WritePacket(&packet.Disconnect{Message: text.Colourf("<red>You must be logged in with XBOX Live to join.</red>")})
+		_ = conn.WritePacket(&packet.Disconnect{Message: text.Colorf("<red>You must be logged in with XBOX Live to join.</red>")})
 		return fmt.Errorf("client was not authenticated to XBOX Live")
 	}
 	if err := conn.enableEncryption(authResult.PublicKey); err != nil {
@@ -754,16 +755,16 @@ func (conn *Conn) handleClientToServerHandshake() error {
 			})
 		}
 
-		// If it has behaviours, add it to the behaviour pack list. If not, we add it to the texture packs
+		// If it has behaviors, add it to the behavior pack list. If not, we add it to the texture packs
 		// list.
-		if pack.HasBehaviours() {
-			behaviourPack := protocol.BehaviourPackInfo{UUID: pack.UUID(), Version: pack.Version(), Size: uint64(pack.Len())}
+		if pack.HasBehaviors() {
+			behaviorPack := protocol.BehaviorPackInfo{UUID: pack.UUID(), Version: pack.Version(), Size: uint64(pack.Len())}
 			if pack.HasScripts() {
 				// One of the resource packs has scripts, so we set HasScripts in the packet to true.
 				pk.HasScripts = true
-				behaviourPack.HasScripts = true
+				behaviorPack.HasScripts = true
 			}
-			pk.BehaviourPacks = append(pk.BehaviourPacks, behaviourPack)
+			pk.BehaviorPacks = append(pk.BehaviorPacks, behaviorPack)
 			continue
 		}
 		texturePack := protocol.TexturePackInfo{UUID: pack.UUID(), Version: pack.Version(), Size: uint64(pack.Len())}
@@ -839,7 +840,7 @@ func (conn *Conn) handleClientCacheStatus(pk *packet.ClientCacheStatus) error {
 func (conn *Conn) handleResourcePacksInfo(pk *packet.ResourcePacksInfo) error {
 	// First create a new resource pack queue with the information in the packet so we can download them
 	// properly later.
-	totalPacks := len(pk.TexturePacks) + len(pk.BehaviourPacks)
+	totalPacks := len(pk.TexturePacks) + len(pk.BehaviorPacks)
 	conn.packQueue = &resourcePackQueue{
 		packAmount:       totalPacks,
 		downloadingPacks: make(map[string]downloadingPack),
@@ -870,9 +871,9 @@ func (conn *Conn) handleResourcePacksInfo(pk *packet.ResourcePacksInfo) error {
 			contentKey: pack.ContentKey,
 		}
 	}
-	for index, pack := range pk.BehaviourPacks {
+	for index, pack := range pk.BehaviorPacks {
 		if _, ok := conn.packQueue.downloadingPacks[pack.UUID]; ok {
-			conn.log.Printf("handle ResourcePacksInfo: duplicate behaviour pack (UUID=%v)\n", pack.UUID)
+			conn.log.Printf("handle ResourcePacksInfo: duplicate behavior pack (UUID=%v)\n", pack.UUID)
 			conn.packQueue.packAmount--
 			continue
 		}
@@ -914,21 +915,21 @@ func (conn *Conn) handleResourcePackStack(pk *packet.ResourcePackStack) error {
 	// We currently don't apply resource packs in any way, so instead we just check if all resource packs in
 	// the stacks are also downloaded.
 	for _, pack := range pk.TexturePacks {
-		for i, behaviourPack := range pk.BehaviourPacks {
-			if pack.UUID == behaviourPack.UUID {
-				// We had a behaviour pack with the same UUID as the texture pack, so we drop the texture
+		for i, behaviorPack := range pk.BehaviorPacks {
+			if pack.UUID == behaviorPack.UUID {
+				// We had a behavior pack with the same UUID as the texture pack, so we drop the texture
 				// pack and log it.
-				conn.log.Printf("handle ResourcePackStack: dropping behaviour pack (UUID=%v) due to a texture pack with the same UUID\n", pack.UUID)
-				pk.BehaviourPacks = append(pk.BehaviourPacks[:i], pk.BehaviourPacks[i+1:]...)
+				conn.log.Printf("handle ResourcePackStack: dropping behavior pack (UUID=%v) due to a texture pack with the same UUID\n", pack.UUID)
+				pk.BehaviorPacks = append(pk.BehaviorPacks[:i], pk.BehaviorPacks[i+1:]...)
 			}
 		}
 		if !conn.hasPack(pack.UUID, pack.Version, false) {
 			return fmt.Errorf("texture pack (UUID=%v, version=%v) not downloaded", pack.UUID, pack.Version)
 		}
 	}
-	for _, pack := range pk.BehaviourPacks {
+	for _, pack := range pk.BehaviorPacks {
 		if !conn.hasPack(pack.UUID, pack.Version, true) {
-			return fmt.Errorf("behaviour pack (UUID=%v, version=%v) not downloaded", pack.UUID, pack.Version)
+			return fmt.Errorf("behavior pack (UUID=%v, version=%v) not downloaded", pack.UUID, pack.Version)
 		}
 	}
 	conn.expect(packet.IDStartGame)
@@ -937,8 +938,8 @@ func (conn *Conn) handleResourcePackStack(pk *packet.ResourcePackStack) error {
 }
 
 // hasPack checks if the connection has a resource pack downloaded with the UUID and version passed, provided
-// the pack either has or does not have behaviours in it.
-func (conn *Conn) hasPack(uuid string, version string, hasBehaviours bool) bool {
+// the pack either has or does not have behaviors in it.
+func (conn *Conn) hasPack(uuid string, version string, hasBehaviors bool) bool {
 	for _, exempted := range exemptedPacks {
 		if exempted.uuid == uuid && exempted.version == version {
 			// The server may send this resource pack on the stack without sending it in the info, as the client
@@ -955,7 +956,7 @@ func (conn *Conn) hasPack(uuid string, version string, hasBehaviours bool) bool 
 		}
 	}
 	for _, pack := range conn.resourcePacks {
-		if pack.UUID() == uuid && pack.Version() == version && pack.HasBehaviours() == hasBehaviours {
+		if pack.UUID() == uuid && pack.Version() == version && pack.HasBehaviors() == hasBehaviors {
 			return true
 		}
 	}
@@ -988,10 +989,10 @@ func (conn *Conn) handleResourcePackClientResponse(pk *packet.ResourcePackClient
 		pk := &packet.ResourcePackStack{BaseGameVersion: protocol.CurrentVersion, Experiments: []protocol.ExperimentData{{Name: "cameras", Enabled: true}}}
 		for _, pack := range conn.resourcePacks {
 			resourcePack := protocol.StackResourcePack{UUID: pack.UUID(), Version: pack.Version()}
-			// If it has behaviours, add it to the behaviour pack list. If not, we add it to the texture packs
+			// If it has behaviors, add it to the behavior pack list. If not, we add it to the texture packs
 			// list.
-			if pack.HasBehaviours() {
-				pk.BehaviourPacks = append(pk.BehaviourPacks, resourcePack)
+			if pack.HasBehaviors() {
+				pk.BehaviorPacks = append(pk.BehaviorPacks, resourcePack)
 				continue
 			}
 			pk.TexturePacks = append(pk.TexturePacks, resourcePack)
@@ -1058,7 +1059,7 @@ func (conn *Conn) startGame() {
 		UseBlockNetworkIDHashes:      data.UseBlockNetworkIDHashes,
 	})
 	_ = conn.Flush()
-	conn.expect(packet.IDRequestChunkRadius, packet.IDSetLocalPlayerAsInitialised)
+	conn.expect(packet.IDRequestChunkRadius, packet.IDSetLocalPlayerAsInit)
 }
 
 // nextResourcePackDownload moves to the next resource pack to download and sends a resource pack data info
@@ -1265,7 +1266,7 @@ func (conn *Conn) handleRequestChunkRadius(pk *packet.RequestChunkRadius) error 
 	if pk.ChunkRadius < 1 {
 		return fmt.Errorf("expected chunk radius of at least 1, got %v", pk.ChunkRadius)
 	}
-	conn.expect(packet.IDSetLocalPlayerAsInitialised)
+	conn.expect(packet.IDSetLocalPlayerAsInit)
 	radius := pk.ChunkRadius
 	if r := conn.gameData.ChunkRadius; r != 0 {
 		radius = r
@@ -1279,11 +1280,11 @@ func (conn *Conn) handleRequestChunkRadius(pk *packet.RequestChunkRadius) error 
 		const s = `CgAKDWJhbWJvb19qdW5nbGUFCGRvd25mYWxsZmZmPwULdGVtcGVyYXR1cmUzM3M/AAoTYmFtYm9vX2p1bmdsZV9oaWxscwUIZG93bmZhbGxmZmY/BQt0ZW1wZXJhdHVyZTMzcz8ACgViZWFjaAUIZG93bmZhbGzNzMw+BQt0ZW1wZXJhdHVyZc3MTD8ACgxiaXJjaF9mb3Jlc3QFCGRvd25mYWxsmpkZPwULdGVtcGVyYXR1cmWamRk/AAoSYmlyY2hfZm9yZXN0X2hpbGxzBQhkb3duZmFsbJqZGT8FC3RlbXBlcmF0dXJlmpkZPwAKGmJpcmNoX2ZvcmVzdF9oaWxsc19tdXRhdGVkBQhkb3duZmFsbM3MTD8FC3RlbXBlcmF0dXJlMzMzPwAKFGJpcmNoX2ZvcmVzdF9tdXRhdGVkBQhkb3duZmFsbM3MTD8FC3RlbXBlcmF0dXJlMzMzPwAKCmNvbGRfYmVhY2gFCGRvd25mYWxsmpmZPgULdGVtcGVyYXR1cmXNzEw9AAoKY29sZF9vY2VhbgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAD8ACgpjb2xkX3RhaWdhBQhkb3duZmFsbM3MzD4FC3RlbXBlcmF0dXJlAAAAvwAKEGNvbGRfdGFpZ2FfaGlsbHMFCGRvd25mYWxszczMPgULdGVtcGVyYXR1cmUAAAC/AAoSY29sZF90YWlnYV9tdXRhdGVkBQhkb3duZmFsbM3MzD4FC3RlbXBlcmF0dXJlAAAAvwAKD2RlZXBfY29sZF9vY2VhbgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAD8AChFkZWVwX2Zyb3plbl9vY2VhbgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAAAAChNkZWVwX2x1a2V3YXJtX29jZWFuBQhkb3duZmFsbAAAAD8FC3RlbXBlcmF0dXJlAAAAPwAKCmRlZXBfb2NlYW4FCGRvd25mYWxsAAAAPwULdGVtcGVyYXR1cmUAAAA/AAoPZGVlcF93YXJtX29jZWFuBQhkb3duZmFsbAAAAD8FC3RlbXBlcmF0dXJlAAAAPwAKBmRlc2VydAUIZG93bmZhbGwAAAAABQt0ZW1wZXJhdHVyZQAAAEAACgxkZXNlcnRfaGlsbHMFCGRvd25mYWxsAAAAAAULdGVtcGVyYXR1cmUAAABAAAoOZGVzZXJ0X211dGF0ZWQFCGRvd25mYWxsAAAAAAULdGVtcGVyYXR1cmUAAABAAAoNZXh0cmVtZV9oaWxscwUIZG93bmZhbGyamZk+BQt0ZW1wZXJhdHVyZc3MTD4AChJleHRyZW1lX2hpbGxzX2VkZ2UFCGRvd25mYWxsmpmZPgULdGVtcGVyYXR1cmXNzEw+AAoVZXh0cmVtZV9oaWxsc19tdXRhdGVkBQhkb3duZmFsbJqZmT4FC3RlbXBlcmF0dXJlzcxMPgAKGGV4dHJlbWVfaGlsbHNfcGx1c190cmVlcwUIZG93bmZhbGyamZk+BQt0ZW1wZXJhdHVyZc3MTD4ACiBleHRyZW1lX2hpbGxzX3BsdXNfdHJlZXNfbXV0YXRlZAUIZG93bmZhbGyamZk+BQt0ZW1wZXJhdHVyZc3MTD4ACg1mbG93ZXJfZm9yZXN0BQhkb3duZmFsbM3MTD8FC3RlbXBlcmF0dXJlMzMzPwAKBmZvcmVzdAUIZG93bmZhbGzNzEw/BQt0ZW1wZXJhdHVyZTMzMz8ACgxmb3Jlc3RfaGlsbHMFCGRvd25mYWxszcxMPwULdGVtcGVyYXR1cmUzMzM/AAoMZnJvemVuX29jZWFuBQhkb3duZmFsbAAAAD8FC3RlbXBlcmF0dXJlAAAAAAAKDGZyb3plbl9yaXZlcgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAAAACgRoZWxsBQhkb3duZmFsbAAAAAAFC3RlbXBlcmF0dXJlAAAAQAAKDWljZV9tb3VudGFpbnMFCGRvd25mYWxsAAAAPwULdGVtcGVyYXR1cmUAAAAAAAoKaWNlX3BsYWlucwUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAAAAChFpY2VfcGxhaW5zX3NwaWtlcwUIZG93bmZhbGwAAIA/BQt0ZW1wZXJhdHVyZQAAAAAACgZqdW5nbGUFCGRvd25mYWxsZmZmPwULdGVtcGVyYXR1cmUzM3M/AAoLanVuZ2xlX2VkZ2UFCGRvd25mYWxszcxMPwULdGVtcGVyYXR1cmUzM3M/AAoTanVuZ2xlX2VkZ2VfbXV0YXRlZAUIZG93bmZhbGzNzEw/BQt0ZW1wZXJhdHVyZTMzcz8ACgxqdW5nbGVfaGlsbHMFCGRvd25mYWxsZmZmPwULdGVtcGVyYXR1cmUzM3M/AAoOanVuZ2xlX211dGF0ZWQFCGRvd25mYWxsZmZmPwULdGVtcGVyYXR1cmUzM3M/AAoTbGVnYWN5X2Zyb3plbl9vY2VhbgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAAAACg5sdWtld2FybV9vY2VhbgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAD8ACgptZWdhX3RhaWdhBQhkb3duZmFsbM3MTD8FC3RlbXBlcmF0dXJlmpmZPgAKEG1lZ2FfdGFpZ2FfaGlsbHMFCGRvd25mYWxszcxMPwULdGVtcGVyYXR1cmWamZk+AAoEbWVzYQUIZG93bmZhbGwAAAAABQt0ZW1wZXJhdHVyZQAAAEAACgptZXNhX2JyeWNlBQhkb3duZmFsbAAAAAAFC3RlbXBlcmF0dXJlAAAAQAAKDG1lc2FfcGxhdGVhdQUIZG93bmZhbGwAAAAABQt0ZW1wZXJhdHVyZQAAAEAAChRtZXNhX3BsYXRlYXVfbXV0YXRlZAUIZG93bmZhbGwAAAAABQt0ZW1wZXJhdHVyZQAAAEAAChJtZXNhX3BsYXRlYXVfc3RvbmUFCGRvd25mYWxsAAAAAAULdGVtcGVyYXR1cmUAAABAAAoabWVzYV9wbGF0ZWF1X3N0b25lX211dGF0ZWQFCGRvd25mYWxsAAAAAAULdGVtcGVyYXR1cmUAAABAAAoPbXVzaHJvb21faXNsYW5kBQhkb3duZmFsbAAAgD8FC3RlbXBlcmF0dXJlZmZmPwAKFW11c2hyb29tX2lzbGFuZF9zaG9yZQUIZG93bmZhbGwAAIA/BQt0ZW1wZXJhdHVyZWZmZj8ACgVvY2VhbgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAD8ACgZwbGFpbnMFCGRvd25mYWxszczMPgULdGVtcGVyYXR1cmXNzEw/AAobcmVkd29vZF90YWlnYV9oaWxsc19tdXRhdGVkBQhkb3duZmFsbM3MTD8FC3RlbXBlcmF0dXJlmpmZPgAKFXJlZHdvb2RfdGFpZ2FfbXV0YXRlZAUIZG93bmZhbGzNzEw/BQt0ZW1wZXJhdHVyZQAAgD4ACgVyaXZlcgUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZQAAAD8ACg1yb29mZWRfZm9yZXN0BQhkb3duZmFsbM3MTD8FC3RlbXBlcmF0dXJlMzMzPwAKFXJvb2ZlZF9mb3Jlc3RfbXV0YXRlZAUIZG93bmZhbGzNzEw/BQt0ZW1wZXJhdHVyZTMzMz8ACgdzYXZhbm5hBQhkb3duZmFsbAAAAAAFC3RlbXBlcmF0dXJlmpmZPwAKD3NhdmFubmFfbXV0YXRlZAUIZG93bmZhbGwAAAA/BQt0ZW1wZXJhdHVyZc3MjD8ACg9zYXZhbm5hX3BsYXRlYXUFCGRvd25mYWxsAAAAAAULdGVtcGVyYXR1cmUAAIA/AAoXc2F2YW5uYV9wbGF0ZWF1X211dGF0ZWQFCGRvd25mYWxsAAAAPwULdGVtcGVyYXR1cmUAAIA/AAoLc3RvbmVfYmVhY2gFCGRvd25mYWxsmpmZPgULdGVtcGVyYXR1cmXNzEw+AAoQc3VuZmxvd2VyX3BsYWlucwUIZG93bmZhbGzNzMw+BQt0ZW1wZXJhdHVyZc3MTD8ACglzd2FtcGxhbmQFCGRvd25mYWxsAAAAPwULdGVtcGVyYXR1cmXNzEw/AAoRc3dhbXBsYW5kX211dGF0ZWQFCGRvd25mYWxsAAAAPwULdGVtcGVyYXR1cmXNzEw/AAoFdGFpZ2EFCGRvd25mYWxszcxMPwULdGVtcGVyYXR1cmUAAIA+AAoLdGFpZ2FfaGlsbHMFCGRvd25mYWxszcxMPwULdGVtcGVyYXR1cmUAAIA+AAoNdGFpZ2FfbXV0YXRlZAUIZG93bmZhbGzNzEw/BQt0ZW1wZXJhdHVyZQAAgD4ACgd0aGVfZW5kBQhkb3duZmFsbAAAAD8FC3RlbXBlcmF0dXJlAAAAPwAKCndhcm1fb2NlYW4FCGRvd25mYWxsAAAAPwULdGVtcGVyYXR1cmUAAAA/AAA=`
 		b, _ := base64.StdEncoding.DecodeString(s)
 		_ = conn.WritePacket(&packet.BiomeDefinitionList{
-			SerialisedBiomeDefinitions: b,
+			SerializedBiomeDefinitions: b,
 		})
 	} else {
 		b, _ := nbt.MarshalEncoding(conn.biomes, nbt.NetworkLittleEndian)
-		_ = conn.WritePacket(&packet.BiomeDefinitionList{SerialisedBiomeDefinitions: b})
+		_ = conn.WritePacket(&packet.BiomeDefinitionList{SerializedBiomeDefinitions: b})
 	}
 
 	_ = conn.WritePacket(&packet.PlayStatus{Status: packet.PlayStatusPlayerSpawn})
@@ -1306,10 +1307,10 @@ func (conn *Conn) handleChunkRadiusUpdated(pk *packet.ChunkRadiusUpdated) error 
 	return nil
 }
 
-// handleSetLocalPlayerAsInitialised handles an incoming SetLocalPlayerAsInitialised packet. It is the final
+// handleSetLocalPlayerAsInitialized handles an incoming SetLocalPlayerAsInitialized packet. It is the final
 // packet in the spawning sequence and it marks the point where a server sided connection is considered
 // logged in.
-func (conn *Conn) handleSetLocalPlayerAsInitialised(pk *packet.SetLocalPlayerAsInitialised) error {
+func (conn *Conn) handleSetLocalPlayerAsInitialized(pk *packet.SetLocalPlayerAsInit) error {
 	if pk.EntityRuntimeID != conn.gameData.EntityRuntimeID {
 		return fmt.Errorf("entity runtime ID mismatch: expected %v (from StartGame), got %v", conn.gameData.EntityRuntimeID, pk.EntityRuntimeID)
 	}
@@ -1365,7 +1366,7 @@ func (conn *Conn) handlePlayStatus(pk *packet.PlayStatus) error {
 }
 
 // tryFinaliseClientConn attempts to finalise the client connection by sending
-// the SetLocalPlayerAsInitialised packet when if the ChunkRadiusUpdated and
+// the SetLocalPlayerAsInitialized packet when if the ChunkRadiusUpdated and
 // PlayStatus packets have been sent.
 func (conn *Conn) tryFinaliseClientConn() {
 	if conn.waitingForSpawn.Load() && conn.gameDataReceived.Load() {
@@ -1374,7 +1375,7 @@ func (conn *Conn) tryFinaliseClientConn() {
 
 		close(conn.spawn)
 		conn.loggedIn = true
-		_ = conn.WritePacket(&packet.SetLocalPlayerAsInitialised{EntityRuntimeID: conn.gameData.EntityRuntimeID})
+		_ = conn.WritePacket(&packet.SetLocalPlayerAsInit{EntityRuntimeID: conn.gameData.EntityRuntimeID})
 	}
 }
 

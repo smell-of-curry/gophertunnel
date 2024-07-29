@@ -26,7 +26,7 @@ type PositionTrackingDBServerBroadcast struct {
 	// indicate that there is not (no longer) a lodestone at that position.
 	BroadcastAction byte
 	// TrackingID is the ID of the PositionTrackingDBClientRequest packet that this packet was in response to.
-	// The tracking ID is also present as the 'id' field in the SerialisedData field.
+	// The tracking ID is also present as the 'id' field in the SerializedData field.
 	TrackingID int32
 	// Payload is a network little endian compound tag holding the data retrieved from the position tracking DB.
 	// An example data structure sent if BroadcastAction is of the type Update:

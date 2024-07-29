@@ -5,25 +5,25 @@ import (
 )
 
 const (
-	BossEventShow = iota
-	BossEventRegisterPlayer
-	BossEventHide
-	BossEventUnregisterPlayer
-	BossEventHealthPercentage
-	BossEventTitle
-	BossEventAppearanceProperties
-	BossEventTexture
-	BossEventRequest
+	BossEventAdd = iota
+	BossEventPlayerAdded
+	BossEventRemove
+	BossEventPlayerRemoved
+	BossEventUpdatePercent
+	BossEventUpdateName
+	BossEventUpdateProperties
+	BossEventUpdateStyle
+	BossEventQuery
 )
 
 const (
-	BossEventColourGrey = iota
-	BossEventColourBlue
-	BossEventColourRed
-	BossEventColourGreen
-	BossEventColourYellow
-	BossEventColourPurple
-	BossEventColourWhite
+	BossEventColorGrey = iota
+	BossEventColorBlue
+	BossEventColorRed
+	BossEventColorGreen
+	BossEventColorYellow
+	BossEventColorPurple
+	BossEventColorWhite
 )
 
 // BossEvent is sent by the server to make a specific 'boss event' occur in the
@@ -55,11 +55,11 @@ type BossEvent struct {
 	HealthPercentage float32
 	// ScreenDarkening currently seems not to do anything.
 	ScreenDarkening uint16
-	// Colour is the colour of the boss bar that is shown when a player is
+	// Color is the color of the boss bar that is shown when a player is
 	// subscribed. It is only set if the EventType is BossEventShow,
 	// BossEventAppearanceProperties or BossEventTexture. This is functional as
-	// of 1.18 and can be any of the BossEventColour constants listed above.
-	Colour uint32
+	// of 1.18 and can be any of the BossEventColor constants listed above.
+	Color uint32
 	// Overlay is the overlay of the boss bar that is shown on top of the boss
 	// bar when a player is subscribed. It currently does not function. It is
 	// only set if the EventType is BossEventShow, BossEventAppearanceProperties
@@ -76,26 +76,26 @@ func (pk *BossEvent) Marshal(io protocol.IO) {
 	io.Varint64(&pk.BossEntityUniqueID)
 	io.Varuint32(&pk.EventType)
 	switch pk.EventType {
-	case BossEventShow:
+	case BossEventAdd:
 		io.String(&pk.BossBarTitle)
 		io.Float32(&pk.HealthPercentage)
 		io.Uint16(&pk.ScreenDarkening)
-		io.Varuint32(&pk.Colour)
+		io.Varuint32(&pk.Color)
 		io.Varuint32(&pk.Overlay)
-	case BossEventRegisterPlayer, BossEventUnregisterPlayer, BossEventRequest:
+	case BossEventPlayerAdded, BossEventPlayerRemoved, BossEventQuery:
 		io.Varint64(&pk.PlayerUniqueID)
-	case BossEventHide:
+	case BossEventRemove:
 		// No extra payload for this boss event type.
-	case BossEventHealthPercentage:
+	case BossEventUpdatePercent:
 		io.Float32(&pk.HealthPercentage)
-	case BossEventTitle:
+	case BossEventUpdateName:
 		io.String(&pk.BossBarTitle)
-	case BossEventAppearanceProperties:
+	case BossEventUpdateProperties:
 		io.Uint16(&pk.ScreenDarkening)
-		io.Varuint32(&pk.Colour)
+		io.Varuint32(&pk.Color)
 		io.Varuint32(&pk.Overlay)
-	case BossEventTexture:
-		io.Varuint32(&pk.Colour)
+	case BossEventUpdateStyle:
+		io.Varuint32(&pk.Color)
 		io.Varuint32(&pk.Overlay)
 	default:
 		io.UnknownEnumOption(pk.EventType, "boss event type")

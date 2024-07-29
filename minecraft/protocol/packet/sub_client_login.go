@@ -18,7 +18,7 @@ type SubClientLogin struct {
 
 // ID ...
 func (*SubClientLogin) ID() uint32 {
-	return IDSubClientLogin
+	return IDSubclientLogin
 }
 
 func (pk *SubClientLogin) Marshal(io protocol.IO) {
