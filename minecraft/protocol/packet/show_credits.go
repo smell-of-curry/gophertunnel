@@ -17,7 +17,7 @@ type ShowCredits struct {
 	PlayerRuntimeID uint64
 	// StatusType is the status type of the credits. It is one of the constants above, and either starts or
 	// stops the credits.
-	StatusType int32
+	CreditsState int32
 }
 
 // ID ...
@@ -26,6 +26,11 @@ func (*ShowCredits) ID() uint32 {
 }
 
 func (pk *ShowCredits) Marshal(io protocol.IO) {
+	if io == nil {
+		// Handle the case where io is nil
+		return
+	}
+
 	io.Varuint64(&pk.PlayerRuntimeID)
-	io.Varint32(&pk.StatusType)
+	io.Varint32(&pk.CreditsState)
 }
