@@ -109,7 +109,7 @@ func init() {
 		IDSetPlayerGameType:        func() Packet { return &SetPlayerGameType{} },
 		IDPlayerList:               func() Packet { return &PlayerList{} },
 		IDSimpleEvent:              func() Packet { return &SimpleEvent{} },
-		IDLegacyTelemetryEvent:     func() Packet { return &Event{} },
+		IDLegacyTelemetryEvent:     func() Packet { return &LegacyTelemetryEvent{} },
 		IDSpawnExperienceOrb:       func() Packet { return &SpawnExperienceOrb{} },
 		IDMapData:                  func() Packet { return &ClientBoundMapItemData{} },
 		IDMapInfoRequest:           func() Packet { return &MapInfoRequest{} },

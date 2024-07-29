@@ -4,9 +4,9 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 )
 
-// Event (LegacyTelemetryEventPacket) is sent by the server to send an event with additional data. It is typically sent to the client for
+// LegacyTelemetryEvent is sent by the server to send an event with additional data. It is typically sent to the client for
 // telemetry reasons, much like the SimpleEvent packet.
-type Event struct {
+type LegacyTelemetryEvent struct {
 	// TargetActorID is the ID of the target actor.
 	TargetActorID int64
 	// EventType is the type of event being transmitted.
@@ -18,12 +18,12 @@ type Event struct {
 }
 
 // ID returns the packet ID.
-func (*Event) ID() uint32 {
+func (*LegacyTelemetryEvent) ID() uint32 {
 	return IDLegacyTelemetryEvent
 }
 
 // Marshal writes the packet fields to the protocol IO.
-func (pk *Event) Marshal(io protocol.IO) {
+func (pk *LegacyTelemetryEvent) Marshal(io protocol.IO) {
 	io.Varint64(&pk.TargetActorID)
 	io.Varuint32(&pk.EventType)
 	io.Uint8(&pk.UsePlayerID)
