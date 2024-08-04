@@ -1,7 +1,6 @@
 package protocol
 
 const (
-	Invalid      = -1
 	AbilityBuild = 1 << iota
 	AbilityMine
 	AbilityDoorsAndSwitches
