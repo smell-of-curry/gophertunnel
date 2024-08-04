@@ -112,9 +112,8 @@ type PlayerAuthInput struct {
 	// GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
 	// other words, when the player is playing in virtual reality.
 	GazeDirection mgl32.Vec3
-	// Tick is the server tick at which the packet was sent. It is used in relation to
-	// CorrectPlayerMovePrediction.
-	Tick uint64
+	// ClientTick is which simulation frame client is on. Used to match corrections
+	ClientTick uint64
 	// Delta was the delta between the old and the new position. There isn't any practical use for this field
 	// as it can be calculated by the server itself.
 	Delta mgl32.Vec3
@@ -151,7 +150,7 @@ func (pk *PlayerAuthInput) Marshal(io protocol.IO) {
 	if pk.PlayMode == PlayModeReality {
 		io.Vec3(&pk.GazeDirection)
 	}
-	io.Varuint64(&pk.Tick)
+	io.Varuint64(&pk.ClientTick)
 	io.Vec3(&pk.Delta)
 
 	if pk.InputData&InputFlagPerformItemInteraction != 0 {
@@ -162,13 +161,13 @@ func (pk *PlayerAuthInput) Marshal(io protocol.IO) {
 		protocol.Single(io, &pk.ItemStackRequest)
 	}
 
+	if pk.InputData&InputFlagPerformBlockActions != 0 {
+		protocol.SliceVarint32Length(io, &pk.BlockActions)
+	}
+
 	if pk.InputData&InputFlagClientPredictedVehicle != 0 {
 		io.Vec2(&pk.VehicleRotation)
 		io.Varint64(&pk.ClientPredictedVehicle)
-	}
-
-	if pk.InputData&InputFlagPerformBlockActions != 0 {
-		protocol.SliceVarint32Length(io, &pk.BlockActions)
 	}
 
 	io.Vec2(&pk.AnalogueMoveVector)
