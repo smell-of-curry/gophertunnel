@@ -9,7 +9,6 @@ const (
 	InventoryLayoutSurvival
 	InventoryLayoutRecipeBook
 	InventoryLayoutCreative
-	InventoryLayoutCount
 )
 
 const (
@@ -20,7 +19,6 @@ const (
 	InventoryLeftTabNature
 	InventoryLeftTabSearch
 	InventoryLeftTabSurvival
-	InventoryLeftTabCount
 )
 
 const (
@@ -28,7 +26,6 @@ const (
 	InventoryRightTabFullScreen
 	InventoryRightTabCrafting
 	InventoryRightTabArmour
-	InventoryRightTabCount
 )
 
 // SetPlayerInventoryOptions is a bidirectional packet that can be used to update the inventory options of a player.
