@@ -16,7 +16,7 @@ type ShowCredits struct {
 	// field is actually here in the first place.
 	PlayerRuntimeID uint64
 	// StatusType is the status type of the credits. It is one of the constants above, and either starts or
-	// stops the credits. It can be nil.
+	// stops the credits.
 	CreditsState int32
 }
 
