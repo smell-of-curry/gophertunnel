@@ -4,7 +4,7 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 )
 
-// ClientCheatAbility functions the same as UpdateAbilities. It is unclear why these two are separated.
+// ClientCheatAbility functions the same as UpdateAbilities. It is unclear why these two were separated.
 //
 // Deprecated: ClientCheatAbility is deprecated as of 1.20.10.
 type ClientCheatAbility struct {
