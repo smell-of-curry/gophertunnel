@@ -59,8 +59,12 @@ func lookupEvent(eventType int32, x *Event) bool {
 		*x = &AgentCommandEvent{}
 	case EventTypeSlashCommandExecuted:
 		*x = &SlashCommandExecutedEvent{}
+	case EventTypeFishBucketed:
+		*x = &FishBucketedEvent{}
 	case EventTypeMobBorn:
 		*x = &MobBornEvent{}
+	case EventTypePetDied:
+		*x = &PetDiedEvent{}
 	case EventTypeCauldronInteract:
 		*x = &CauldronInteractEvent{}
 	case EventTypeComposterInteract:
@@ -71,6 +75,12 @@ func lookupEvent(eventType int32, x *Event) bool {
 		*x = &EntityDefinitionTriggerEvent{}
 	case EventTypeRaidUpdate:
 		*x = &RaidUpdateEvent{}
+	case EventTypeMovementAnomaly:
+		*x = &MovementAnomalyEvent{}
+	case EventTypeMovementCorrected:
+		*x = &MovementCorrectedEvent{}
+	case EventTypeExtractHoney:
+		*x = &ExtractHoneyEvent{}
 	case EventTypeTargetBlockHit:
 		*x = &TargetBlockHitEvent{}
 	case EventTypePiglinBarter:
@@ -81,6 +91,12 @@ func lookupEvent(eventType int32, x *Event) bool {
 		*x = &CodeBuilderRuntimeActionEvent{}
 	case EventTypeCodeBuilderScoreboard:
 		*x = &CodeBuilderScoreboardEvent{}
+	case EventTypeStriderRiddenInLavaInOverworld:
+		*x = &StriderRiddenInLavaInOverworldEvent{}
+	case EventTypeSneakCloseToSculkSensor:
+		*x = &SneakCloseToSculkSensorEvent{}
+	case EventTypeCarefulRestoration:
+		*x = &CarefulRestorationEvent{}
 	case EventTypeItemUsed:
 		*x = &ItemUsedEvent{}
 	default:
@@ -112,8 +128,12 @@ func lookupEventType(x Event, eventType *int32) bool {
 		*eventType = EventTypeAgentCommand
 	case *SlashCommandExecutedEvent:
 		*eventType = EventTypeSlashCommandExecuted
+	case *FishBucketedEvent:
+		*eventType = EventTypeFishBucketed
 	case *MobBornEvent:
 		*eventType = EventTypeMobBorn
+	case *PetDiedEvent:
+		*eventType = EventTypePetDied
 	case *CauldronInteractEvent:
 		*eventType = EventTypeCauldronInteract
 	case *ComposterInteractEvent:
@@ -124,12 +144,28 @@ func lookupEventType(x Event, eventType *int32) bool {
 		*eventType = EventTypeEntityDefinitionTrigger
 	case *RaidUpdateEvent:
 		*eventType = EventTypeRaidUpdate
+	case *MovementAnomalyEvent:
+		*eventType = EventTypeMovementAnomaly
+	case *MovementCorrectedEvent:
+		*eventType = EventTypeMovementCorrected
+	case *ExtractHoneyEvent:
+		*eventType = EventTypeExtractHoney
 	case *TargetBlockHitEvent:
 		*eventType = EventTypeTargetBlockHit
 	case *PiglinBarterEvent:
 		*eventType = EventTypePiglinBarter
 	case *WaxedOrUnwaxedCopperEvent:
 		*eventType = EventTypePlayerWaxedOrUnwaxedCopper
+	case *CodeBuilderRuntimeActionEvent:
+		*eventType = EventTypeCodeBuilderRuntimeAction
+	case *CodeBuilderScoreboardEvent:
+		*eventType = EventTypeCodeBuilderScoreboard
+	case *StriderRiddenInLavaInOverworldEvent:
+		*eventType = EventTypeStriderRiddenInLavaInOverworld
+	case *SneakCloseToSculkSensorEvent:
+		*eventType = EventTypeSneakCloseToSculkSensor
+	case *CarefulRestorationEvent:
+		*eventType = EventTypeCarefulRestoration
 	case *ItemUsedEvent:
 		*eventType = EventTypeItemUsed
 	default:
@@ -327,6 +363,12 @@ func (s *SlashCommandExecutedEvent) Marshal(r IO) {
 	r.String(&s.ErrorList)
 }
 
+// FishBucketedEvent is the event data sent when a fish is bucketed.
+type FishBucketedEvent struct{}
+
+// Marshal ...
+func (f *FishBucketedEvent) Marshal(r IO) {}
+
 // MobBornEvent is the event data sent when a mob is born.
 type MobBornEvent struct {
 	// EntityType ...
@@ -343,6 +385,12 @@ func (m *MobBornEvent) Marshal(r IO) {
 	r.Varint32(&m.Variant)
 	r.Uint8(&m.Color)
 }
+
+// PetDiedEvent is the event data sent when a pet dies.
+type PetDiedEvent struct{}
+
+// Marshal ...
+func (p *PetDiedEvent) Marshal(r IO) {}
 
 // CauldronInteractEvent is the event data sent when a cauldron is interacted with.
 type CauldronInteractEvent struct {
@@ -411,6 +459,25 @@ func (ra *RaidUpdateEvent) Marshal(r IO) {
 	r.Bool(&ra.WonRaid)
 }
 
+// MovementAnomalyEvent is an event used to detect movement anomalies.
+type MovementAnomalyEvent struct{}
+
+// Marshal ...
+func (m *MovementAnomalyEvent) Marshal(r IO) {}
+
+// MovementCorrectedEvent is an event used to correct movement anomalies.
+type MovementCorrectedEvent struct{}
+
+// Marshal ...
+func (m *MovementCorrectedEvent) Marshal(r IO) {}
+
+// ExtractHoneyEvent is an event used to extract honey from a hive.
+type ExtractHoneyEvent struct{}
+
+// Marshal ...
+func (e *ExtractHoneyEvent) Marshal(r IO) {}
+
+// TargetBlockHitEvent is an event used when a target block is hit by a arrow.
 type TargetBlockHitEvent struct {
 	// RedstoneLevel ...
 	RedstoneLevel int32
@@ -421,6 +488,7 @@ func (t *TargetBlockHitEvent) Marshal(r IO) {
 	r.Varint32(&t.RedstoneLevel)
 }
 
+// PiglinBarterEvent is an event sent by the server when a piglin barters.
 type PiglinBarterEvent struct {
 	// ItemID ...
 	ItemID int32
@@ -480,6 +548,25 @@ func (c *CodeBuilderScoreboardEvent) Marshal(r IO) {
 	r.Varint32(&c.Score)
 }
 
+// StriderRiddenInLavaInOverworldEvent is an event sent by the server when a strider is ridden in lava in the overworld.
+type StriderRiddenInLavaInOverworldEvent struct{}
+
+// Marshal ...
+func (s *StriderRiddenInLavaInOverworldEvent) Marshal(r IO) {}
+
+// SneakCloseToSculkSensorEvent is an event sent by the server when a player sneaks close to a sculk sensor.
+type SneakCloseToSculkSensorEvent struct{}
+
+// Marshal ...
+func (s *SneakCloseToSculkSensorEvent) Marshal(r IO) {}
+
+// CarefulRestorationEvent is an event sent by the server when a player performs a careful restoration.
+type CarefulRestorationEvent struct{}
+
+// Marshal ...
+func (c *CarefulRestorationEvent) Marshal(r IO) {}
+
+// ItemUsedEvent is an event sent by the server when an item is used.
 type ItemUsedEvent struct {
 	ItemID    int16
 	ItemAux   int32
