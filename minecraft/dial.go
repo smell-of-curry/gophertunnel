@@ -12,10 +12,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 	"math/rand"
 	"net"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -26,6 +24,7 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 )
 
@@ -34,7 +33,7 @@ import (
 type Dialer struct {
 	// ErrorLog is a log.Logger that errors that occur during packet handling of servers are written to. By
 	// default, ErrorLog is set to one equal to the global logger.
-	ErrorLog *log.Logger
+	ErrorLog *logrus.Logger
 
 	// ClientData is the client data used to login to the server with. It includes fields such as the skin,
 	// locale and UUIDs unique to the client. If empty, a default is sent produced using defaultClientData().
@@ -160,7 +159,7 @@ func (d Dialer) DialContext(ctx context.Context, network, address string) (conn 
 		d.IdentityData = readChainIdentityData([]byte(chainData))
 	}
 	if d.ErrorLog == nil {
-		d.ErrorLog = log.New(os.Stderr, "", log.LstdFlags)
+		d.ErrorLog = logrus.New()
 	}
 	if d.Protocol == nil {
 		d.Protocol = DefaultProtocol
@@ -279,7 +278,7 @@ func readChainIdentityData(chainData []byte) login.IdentityData {
 
 // listenConn listens on the connection until it is closed on another goroutine. The channel passed will
 // receive a value once the connection is logged in.
-func listenConn(conn *Conn, logger *log.Logger, l, c chan struct{}) {
+func listenConn(conn *Conn, logger *logrus.Logger, l, c chan struct{}) {
 	defer func() {
 		_ = conn.Close()
 	}()

@@ -18,8 +18,11 @@ require (
 	golang.org/x/text v0.16.0
 )
 
+require golang.org/x/sys v0.21.0 // indirect
+
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/sirupsen/logrus v1.9.3
 	golang.org/x/crypto v0.24.0 // indirect
 	golang.org/x/image v0.17.0 // indirect
 )

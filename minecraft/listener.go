@@ -6,9 +6,7 @@ import (
 	"crypto/rand"
 	"errors"
 	"fmt"
-	"log"
 	"net"
-	"os"
 	"slices"
 	"sync"
 	"sync/atomic"
@@ -17,13 +15,14 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 	"github.com/sandertv/gophertunnel/minecraft/resource"
+	"github.com/sirupsen/logrus"
 )
 
 // ListenConfig holds settings that may be edited to change behavior of a Listener.
 type ListenConfig struct {
 	// ErrorLog is a log.Logger that errors that occur during packet handling of clients are written to. By
 	// default, ErrorLog is set to one equal to the global logger.
-	ErrorLog *log.Logger
+	ErrorLog *logrus.Logger
 
 	// AuthenticationDisabled specifies if authentication of players that join is disabled. If set to true, no
 	// verification will be done to ensure that the player connecting is authenticated using their XBOX Live
@@ -119,7 +118,7 @@ func (cfg ListenConfig) Listen(network string, address string) (*Listener, error
 	}
 
 	if cfg.ErrorLog == nil {
-		cfg.ErrorLog = log.New(os.Stderr, "", log.LstdFlags)
+		cfg.ErrorLog = logrus.New()
 	}
 	if cfg.StatusProvider == nil {
 		cfg.StatusProvider = NewStatusProvider("Minecraft Server", "Gophertunnel")

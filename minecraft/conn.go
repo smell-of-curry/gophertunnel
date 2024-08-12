@@ -10,7 +10,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"strings"
 	"sync"
@@ -27,6 +26,7 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
 	"github.com/sandertv/gophertunnel/minecraft/resource"
 	"github.com/sandertv/gophertunnel/minecraft/text"
+	"github.com/sirupsen/logrus"
 )
 
 // exemptedResourcePack is a resource pack that is exempted from being downloaded. These packs may be directly
@@ -55,7 +55,7 @@ type Conn struct {
 	close chan struct{}
 
 	conn        net.Conn
-	log         *log.Logger
+	log         *logrus.Logger
 	authEnabled bool
 
 	proto         Protocol
@@ -149,7 +149,7 @@ type Conn struct {
 // Minecraft packets to that net.Conn.
 // newConn accepts a private key which will be used to identify the connection. If a nil key is passed, the
 // key is generated.
-func newConn(netConn net.Conn, key *ecdsa.PrivateKey, log *log.Logger, proto Protocol, flushRate time.Duration, limits bool) *Conn {
+func newConn(netConn net.Conn, key *ecdsa.PrivateKey, log *logrus.Logger, proto Protocol, flushRate time.Duration, limits bool) *Conn {
 	conn := &Conn{
 		enc:          packet.NewEncoder(netConn),
 		dec:          packet.NewDecoder(netConn),
