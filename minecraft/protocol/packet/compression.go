@@ -3,11 +3,12 @@ package packet
 import (
 	"bytes"
 	"fmt"
+	"io"
+	"sync"
+
 	"github.com/golang/snappy"
 	"github.com/klauspost/compress/flate"
 	"github.com/sandertv/gophertunnel/minecraft/internal"
-	"io"
-	"sync"
 )
 
 // Compression represents a compression algorithm that can compress and decompress data.
@@ -30,7 +31,7 @@ var (
 	// algorithm. This is used by default.
 	SnappyCompression snappyCompression
 
-	DefaultCompression Compression = FlateCompression
+	DefaultCompression Compression = SnappyCompression
 )
 
 type (
