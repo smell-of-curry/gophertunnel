@@ -306,14 +306,14 @@ func (listener *Listener) handleConn(conn *Conn) {
 		packets, err := conn.dec.Decode()
 		if err != nil {
 			if !errors.Is(err, net.ErrClosed) {
-				conn.log.Printf("listener conn: %v\n", err)
+				conn.log.Errorf("connection decode error: %v", err)
 			}
 			return
 		}
 		for _, data := range packets {
 			loggedInBefore := conn.loggedIn
 			if err := conn.receive(data); err != nil {
-				conn.log.Printf("listener conn: %v", err)
+				conn.log.Errorf("connection receive error: %v", err)
 				return
 			}
 			if !loggedInBefore && conn.loggedIn {
