@@ -243,6 +243,7 @@ func (listener *Listener) listen() {
 		if err != nil {
 			// The underlying listener was closed, meaning we should return immediately so this listener can
 			// close too.
+			listener.cfg.ErrorLog.Errorf("listener accept error: %v", err)
 			return
 		}
 		listener.createConn(netConn)
