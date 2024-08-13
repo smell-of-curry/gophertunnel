@@ -190,10 +190,10 @@ func (listener *Listener) AddResourcePack(pack *resource.Pack) {
 // Note: This method will not update resource packs for active connections.
 func (listener *Listener) RemoveResourcePack(uuid string) {
 	listener.packsMu.Lock()
+	defer listener.packsMu.Unlock()
 	listener.packs = slices.DeleteFunc(listener.packs, func(pack *resource.Pack) bool {
 		return pack.UUID() == uuid
 	})
-	listener.packsMu.Unlock()
 }
 
 // Addr returns the address of the underlying listener.
