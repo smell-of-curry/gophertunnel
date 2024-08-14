@@ -27,6 +27,8 @@ type ActorLink struct {
 	// PassengerInitiated specifies if the link was changed by the passenger, for example the player starting to ride
 	// a horse by itself. This is generally true in vanilla environment for players.
 	PassengerInitiated bool
+	// VehicleAngularVelocity is the angular velocity of the vehicle that the rider is riding.
+	VehicleAngularVelocity float32
 }
 
 // Marshal encodes/decodes a single entity link.
@@ -36,4 +38,5 @@ func (x *ActorLink) Marshal(r IO) {
 	r.Uint8(&x.LinkType)
 	r.Bool(&x.Immediate)
 	r.Bool(&x.PassengerInitiated)
+	r.Float32(&x.VehicleAngularVelocity)
 }

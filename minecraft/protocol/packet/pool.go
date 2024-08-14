@@ -252,6 +252,10 @@ func init() {
 		IDSetHud:                         func() Packet { return &SetHud{} },
 		IDAwardAchievement:               func() Packet { return &AwardAchievement{} },
 		IDClientBoundCloseForm:           func() Packet { return &ClientBoundCloseForm{} },
+		IDServerBoundLoadingScreen:       func() Packet { return &ServerBoundLoadingScreen{} },
+		IDJigsawStructureData:            func() Packet { return &JigsawStructureData{} },
+		IDCurrentStructureFeature:        func() Packet { return &CurrentStructureFeature{} },
+		IDServerBoundDiagnostics:         func() Packet { return &ServerBoundDiagnostics{} },
 	}
 	for id, pk := range serverOriginating {
 		RegisterPacketFromServer(id, pk)
@@ -336,6 +340,8 @@ func init() {
 		IDBlockActorData:                      func() Packet { return &BlockActorData{} },
 		IDPlayerToggleCrafterSlotRequest:      func() Packet { return &PlayerToggleCrafterSlotRequest{} },
 		IDSetPlayerInventoryOptions:           func() Packet { return &SetPlayerInventoryOptions{} },
+		IDServerBoundLoadingScreen:            func() Packet { return &ServerBoundLoadingScreen{} },
+		IDServerBoundDiagnostics:              func() Packet { return &ServerBoundDiagnostics{} },
 	}
 	for id, pk := range clientOriginating {
 		RegisterPacketFromClient(id, pk)
