@@ -361,7 +361,7 @@ func (conn *Conn) ReadPacket() (pk packet.Packet, err error) {
 	if data, ok := conn.takeDeferredPacket(); ok {
 		pk, err := data.decode(conn)
 		if err != nil {
-			conn.log.Println(err)
+			conn.log.Errorln(err)
 			return conn.ReadPacket()
 		}
 		if len(pk) == 0 {
@@ -381,7 +381,7 @@ func (conn *Conn) ReadPacket() (pk packet.Packet, err error) {
 	case data := <-conn.packets:
 		pk, err := data.decode(conn)
 		if err != nil {
-			conn.log.Println(err)
+			conn.log.Errorln(err)
 			return conn.ReadPacket()
 		}
 		if len(pk) == 0 {
@@ -807,7 +807,7 @@ type saltClaims struct {
 	Salt string `json:"salt"`
 }
 
-// handleServerToClientHandshake handles an incoming ServerToClientHandshake packet. It initialises encryption
+// handleServerToClientHandshake handles an incoming ServerToClientHandshake packet. It initializes encryption
 // on the client side of the connection, using the hash and the public key from the server exposed in the
 // packet.
 func (conn *Conn) handleServerToClientHandshake(pk *packet.ServerToClientHandshake) error {
