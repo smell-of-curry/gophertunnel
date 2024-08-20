@@ -1,11 +1,11 @@
 package protocol
 
-// TrimPattern represents a pattern that can be applied to an armour pice in combination with a TrimMaterial.
+// TrimPattern represents a pattern that can be applied to an armour piece in combination with a TrimMaterial.
 type TrimPattern struct {
 	// ItemName is the identifier of the item that represents the pattern, for example
 	// 'minecraft:wayfinder_armor_trim_smithing_template'.
 	ItemName string
-	// PatternID is the identifier of the pattern, for example 'wayfinder'.
+	// PatternID is the identifier of the pattern, for example, 'wayfinder'.
 	PatternID string
 }
 

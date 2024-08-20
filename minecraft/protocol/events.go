@@ -246,14 +246,14 @@ func (p *PortalUsedEvent) Marshal(r IO) {
 
 // MobKilledEvent is the event data sent when a mob is killed.
 type MobKilledEvent struct {
-	// InstigatorActorID ...
-	InstigatorActorID int64
-	// TargetActorID ...
-	TargetActorID int64
-	// InstigatorsChildActorType ...
-	InstigatorsChildActorType int32
-	// DamageSource ...
-	DamageSource int32
+	// KillerEntityUniqueID ...
+	KillerEntityUniqueID int64
+	// VictimEntityUniqueID ...
+	VictimEntityUniqueID int64
+	// KillerEntityType ...
+	KillerEntityType int32
+	// EntityDamageCause ...
+	EntityDamageCause int32
 	// VillagerTradeTier -1 if not a trading actor.
 	VillagerTradeTier int32
 	// VillagerDisplayName Empty if not a trading actor.
@@ -262,10 +262,10 @@ type MobKilledEvent struct {
 
 // Marshal ...
 func (m *MobKilledEvent) Marshal(r IO) {
-	r.Varint64(&m.InstigatorActorID)
-	r.Varint64(&m.TargetActorID)
-	r.Varint32(&m.InstigatorsChildActorType)
-	r.Varint32(&m.DamageSource)
+	r.Varint64(&m.KillerEntityUniqueID)
+	r.Varint64(&m.VictimEntityUniqueID)
+	r.Varint32(&m.KillerEntityType)
+	r.Varint32(&m.EntityDamageCause)
 	r.Varint32(&m.VillagerTradeTier)
 	r.String(&m.VillagerDisplayName)
 }
@@ -498,7 +498,7 @@ func (t *TargetBlockHitEvent) Marshal(r IO) {
 	r.Varint32(&t.RedstoneLevel)
 }
 
-// PiglinBarterEvent is an event sent by the server when a piglin barters.
+// PiglinBarterEvent is called when a player drops gold ingots to a piglin to initiate a trade for an item.
 type PiglinBarterEvent struct {
 	// ItemID ...
 	ItemID int32
@@ -576,7 +576,7 @@ type CarefulRestorationEvent struct{}
 // Marshal ...
 func (c *CarefulRestorationEvent) Marshal(r IO) {}
 
-// ItemUsedEvent is an event sent by the server when an item is used.
+// ItemUsedEvent is when a player right clicks a item.
 type ItemUsedEvent struct {
 	ItemID    int16
 	ItemAux   int32
