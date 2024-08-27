@@ -316,7 +316,7 @@ func (listener *Listener) handleConn(conn *Conn) {
 		for _, data := range packets {
 			loggedInBefore := conn.loggedIn
 			if err := conn.receive(data); err != nil {
-				conn.log.Errorf("connection receive error: %v", err)
+				conn.log.Debugf("connection receive error: %v", err)
 				return
 			}
 			if !loggedInBefore && conn.loggedIn {
