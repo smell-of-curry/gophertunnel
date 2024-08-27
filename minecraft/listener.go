@@ -234,6 +234,9 @@ func (listener *Listener) listen() {
 		}
 	}()
 	defer func() {
+		if r := recover(); r != nil {
+			listener.cfg.ErrorLog.Errorf("Recovered from panic in Handling Deep Listener: %v", r)
+		}
 		close(listener.incoming)
 		close(listener.close)
 		_ = listener.Close()
