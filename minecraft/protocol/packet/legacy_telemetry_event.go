@@ -8,7 +8,7 @@ import (
 // telemetry reasons, much like the SimpleEvent packet.
 type LegacyTelemetryEvent struct {
 	// TargetActorID is the ID of the target actor.
-	TargetActorID uint64
+	TargetActorID int64
 	// UsePlayerID indicates if the player ID should be used.
 	UsePlayerID byte
 	// Event is the event that is transmitted.
@@ -22,7 +22,7 @@ func (*LegacyTelemetryEvent) ID() uint32 {
 
 // Marshal writes the packet fields to the protocol IO.
 func (pk *LegacyTelemetryEvent) Marshal(io protocol.IO) {
-	io.Varuint64(&pk.TargetActorID)
+	io.Varint64(&pk.TargetActorID)
 	io.EventType(&pk.Event)
 	io.Uint8(&pk.UsePlayerID)
 	pk.Event.Marshal(io)
