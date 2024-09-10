@@ -25,3 +25,5 @@ require (
 	golang.org/x/crypto v0.26.0 // indirect
 	golang.org/x/image v0.19.0 // indirect
 )
+
+replace github.com/sandertv/go-raknet => github.com/smell-of-curry/go-raknet v0.0.0-20240910211656-1f6850ca73b1
