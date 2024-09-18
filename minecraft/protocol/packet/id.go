@@ -231,4 +231,6 @@ const (
 	IDJigsawStructureData
 	IDCurrentStructureFeature
 	IDServerBoundDiagnostics
+	IDCameraAimAssist
+	IDContainerRegistryCleanup
 )
