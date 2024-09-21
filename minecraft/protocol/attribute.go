@@ -56,6 +56,7 @@ type Attribute struct {
 func (x *Attribute) Marshal(r IO) {
 	r.Float32(&x.Min)
 	r.Float32(&x.Max)
+	r.Float32(&x.Current)
 	r.Float32(&x.DefaultMin)
 	r.Float32(&x.DefaultMax)
 	r.Float32(&x.Default)
