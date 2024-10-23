@@ -59,6 +59,10 @@ const (
 	InputFlagVerticalCollision
 	InputFlagDownLeft
 	InputFlagDownRight
+	InputFlagCameraRelativeMovementEnabled
+	InputFlagRotControlledByMoveDirection
+	InputFlagStartSpinAttack
+	InputFlagStopSpinAttack
 )
 
 const (
@@ -113,10 +117,12 @@ type PlayerAuthInput struct {
 	// InteractionModel is a constant representing the interaction model the player is using. It is one of the
 	// constants that may be found above.
 	InteractionModel uint32
-	// GazeDirection is the direction in which the player is gazing, when the PlayMode is PlayModeReality: In
-	// other words, when the player is playing in virtual reality.
-	GazeDirection mgl32.Vec3
-	// ClientTick is which simulation frame client is on. Used to match corrections
+	// InteractPitch and interactYaw is the rotation the player is looking that they intend to use for
+	// interactions. This is only different to Pitch and Yaw in cases such as VR or when custom cameras
+	// being used.
+	InteractPitch, InteractYaw float32
+	// Tick is the server tick at which the packet was sent. It is used in relation to
+	// CorrectPlayerMovePrediction.
 	ClientTick uint64
 	// Delta was the delta between the old and the new position. There isn't any practical use for this field
 	// as it can be calculated by the server itself.
@@ -134,6 +140,7 @@ type PlayerAuthInput struct {
 	// AnalogueMoveVector is a Vec2 that specifies the direction in which the player moved, as a combination
 	// of X/Z values which are created using an analogue input.
 	AnalogueMoveVector mgl32.Vec2
+	CameraOrientation  mgl32.Vec3
 }
 
 // ID ...
@@ -151,9 +158,8 @@ func (pk *PlayerAuthInput) Marshal(io protocol.IO) {
 	io.Varuint32(&pk.InputMode)
 	io.Varuint32(&pk.PlayMode)
 	io.Varuint32(&pk.InteractionModel)
-	if pk.PlayMode == PlayModeReality {
-		io.Vec3(&pk.GazeDirection)
-	}
+	io.Float32(&pk.InteractPitch)
+	io.Float32(&pk.InteractYaw)
 	io.Varuint64(&pk.ClientTick)
 	io.Vec3(&pk.Delta)
 
@@ -175,4 +181,5 @@ func (pk *PlayerAuthInput) Marshal(io protocol.IO) {
 	}
 
 	io.Vec2(&pk.AnalogueMoveVector)
+	io.Vec3(&pk.CameraOrientation)
 }
