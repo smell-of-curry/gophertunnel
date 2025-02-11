@@ -171,7 +171,7 @@ const (
 	IDCameraShake
 	IDPlayerFogSetting
 	IDCorrectPlayerMovePrediction
-	IDItemComponent
+	IDItemRegistry
 	// Deprecated: IDFilterText is deprecated.
 	IDFilterText
 	IDClientBoundDebugRenderer
@@ -236,4 +236,6 @@ const (
 	IDMovementEffect
 	IDSetMovementAuthority
 	IDCameraAimAssistPresets
+	IDClientCameraAimAssist
+	IDClientMovementPredictionSync
 )
