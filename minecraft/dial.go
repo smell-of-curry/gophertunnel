@@ -25,9 +25,8 @@ import (
 	"github.com/sandertv/gophertunnel/minecraft/protocol"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/login"
 	"github.com/sandertv/gophertunnel/minecraft/protocol/packet"
-	"golang.org/x/oauth2"
-
 	"github.com/sirupsen/logrus"
+	"golang.org/x/oauth2"
 )
 
 // Dialer allows specifying specific settings for connection to a Minecraft server.

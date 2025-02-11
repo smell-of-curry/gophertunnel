@@ -96,7 +96,7 @@ func (pk *BossEvent) Marshal(io protocol.IO) {
 	case BossEventUpdateName:
 		io.String(&pk.BossBarTitle)
 		io.String(&pk.FilteredBossBarTitle)
-	case BossEventAppearanceProperties:
+	case BossEventUpdateProperties:
 		io.Uint16(&pk.ScreenDarkening)
 		io.Varuint32(&pk.Color)
 		io.Varuint32(&pk.Overlay)

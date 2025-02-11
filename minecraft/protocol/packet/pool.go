@@ -350,6 +350,7 @@ func init() {
 		IDSetPlayerInventoryOptions:           func() Packet { return &SetPlayerInventoryOptions{} },
 		IDServerBoundLoadingScreen:            func() Packet { return &ServerBoundLoadingScreen{} },
 		IDServerBoundDiagnostics:              func() Packet { return &ServerBoundDiagnostics{} },
+		IDClientMovementPredictionSync:        func() Packet { return &ClientMovementPredictionSync{} },
 	}
 	for id, pk := range clientOriginating {
 		RegisterPacketFromClient(id, pk)
