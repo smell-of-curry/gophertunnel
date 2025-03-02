@@ -14,15 +14,15 @@ require (
 	github.com/pelletier/go-toml v1.9.5
 	github.com/sandertv/go-raknet v1.14.2
 	github.com/sirupsen/logrus v1.9.3
-	golang.org/x/net v0.30.0
+	golang.org/x/net v0.35.0
 	golang.org/x/oauth2 v0.23.0
-	golang.org/x/text v0.19.0
+	golang.org/x/text v0.22.0
 )
 
 require (
-	golang.org/x/crypto v0.28.0 // indirect
+	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/image v0.21.0 // indirect
-	golang.org/x/sys v0.26.0 // indirect
+	golang.org/x/sys v0.30.0 // indirect
 )
 
 replace github.com/sandertv/go-raknet => C:\bedrock-server\go-raknet
