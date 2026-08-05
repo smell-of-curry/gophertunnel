@@ -13,10 +13,19 @@ type LevelChunk struct {
 	Position protocol.ChunkPos
 	// Dimension is the ID of the dimension that the chunk belongs to. This must always be set otherwise the
 	// client will always assume the chunk is part of the overworld dimension.
-	Dimension     int32
+	Dimension int32
+	// SubChunkCount is the amount of sub-chunks that are part of the chunk
+	// sent. Depending on if the cache is enabled, a list of blob hashes will be
+	// sent, or, if disabled, the sub-chunk data.
+	// As of 1.26.40, request mode is signalled with SubChunkCount set to 0 and
+	// SubChunkLimit present (limited) or absent (limitless). The legacy
+	// MaxUint32 sentinels are outside the client's accepted 0..64 range and are
+	// rejected by Marshal.
 	SubChunkCount uint32
-	// SubChunkLimit is the maximum amount of sub-chunks a client will request when in request mode. A value of -1
-	// means there is no limit.
+	// SubChunkLimit is the maximum amount of sub chunks a client will request when in request mode. This
+	// is usually set to the highest sub chunk present within the chunk. When set with SubChunkCount 0,
+	// the client sends SubChunkRequest packets up to this limit. A value of -1 means there is no limit
+	// when SubChunkLimit is present; omit the optional entirely for limitless request mode.
 	SubChunkLimit protocol.Optional[int32]
 	// CacheEnabled specifies if the client blob cache should be enabled. This system is based on hashes of
 	// blobs which are consistent and saved by the client in combination with that blob, so that the server

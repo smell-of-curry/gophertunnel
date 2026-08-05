@@ -1,5 +1,24 @@
 package protocol
 
+import "math"
+
+const (
+	// SubChunkRequestModeLimitless is the legacy SubChunkCount sentinel that asked the client to request
+	// every sub-chunk without a height limit.
+	//
+	// Deprecated: As of 1.26.40, clients reject MaxUint32 SubChunkCount values.
+	// Use SubChunkCount 0 with SubChunkLimit unset instead. Marshal also rejects
+	// counts above 64, so assigning this constant will fail at encode time.
+	SubChunkRequestModeLimitless = math.MaxUint32 - iota
+	// SubChunkRequestModeLimited is the legacy SubChunkCount sentinel that asked the client to request
+	// sub-chunks up to SubChunkLimit.
+	//
+	// Deprecated: As of 1.26.40, clients reject MaxUint32-1 SubChunkCount values.
+	// Use SubChunkCount 0 with SubChunkLimit set instead. Marshal also rejects
+	// counts above 64, so assigning this constant will fail at encode time.
+	SubChunkRequestModeLimited
+)
+
 const (
 	HeightMapDataNone = iota
 	HeightMapDataHasData
