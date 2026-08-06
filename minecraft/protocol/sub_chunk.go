@@ -39,20 +39,63 @@ type SubChunkEntry struct {
 	BlobHash Optional[uint64]
 }
 
-// Marshal encodes/decodes a SubChunkEntry.
+// Marshal encodes/decodes a SubChunkEntry assuming the blob cache is enabled.
+//
+// Wire format (unchanged through 1.26.40 / protocol 2168): payload presence is
+// gated by Result (skipped for SuccessAllAir), height-map bytes are gated by
+// HeightMapType / RenderHeightMapType, and BlobHash is always a raw uint64.
+// Do NOT use OptionalFunc bool prefixes here — that desyncs the client and
+// produces a Block disconnect.
 func (x *SubChunkEntry) Marshal(r IO) {
 	Single(r, &x.Offset)
 	r.Uint8(&x.Result)
-	OptionalFunc(r, &x.RawPayload, r.ByteSlice)
+	if x.Result != SubChunkResultSuccessAllAir {
+		payload, _ := x.RawPayload.Value()
+		r.ByteSlice(&payload)
+		x.RawPayload = Option(payload)
+	} else {
+		x.RawPayload = Optional[[]byte]{}
+	}
+	marshalHeightMaps(r, x)
+	hash, _ := x.BlobHash.Value()
+	r.Uint64(&hash)
+	x.BlobHash = Option(hash)
+}
+
+// SubChunkEntryNoCache encodes/decodes a SubChunkEntry assuming the blob cache is not enabled.
+func SubChunkEntryNoCache(r IO, x *SubChunkEntry) {
+	Single(r, &x.Offset)
+	r.Uint8(&x.Result)
+	payload, _ := x.RawPayload.Value()
+	r.ByteSlice(&payload)
+	x.RawPayload = Option(payload)
+	marshalHeightMaps(r, x)
+	x.BlobHash = Optional[uint64]{}
+}
+
+func marshalHeightMaps(r IO, x *SubChunkEntry) {
 	r.Uint8(&x.HeightMapType)
-	OptionalFunc(r, &x.HeightMapData, func(data *[]int8) {
-		FuncSliceOfLen(r, 256, data, r.Int8)
-	})
+	if x.HeightMapType == HeightMapDataHasData {
+		data, _ := x.HeightMapData.Value()
+		if data == nil {
+			data = make([]int8, 256)
+		}
+		FuncSliceOfLen(r, 256, &data, r.Int8)
+		x.HeightMapData = Option(data)
+	} else {
+		x.HeightMapData = Optional[[]int8]{}
+	}
 	r.Uint8(&x.RenderHeightMapType)
-	OptionalFunc(r, &x.RenderHeightMapData, func(data *[]int8) {
-		FuncSliceOfLen(r, 256, data, r.Int8)
-	})
-	OptionalFunc(r, &x.BlobHash, r.Uint64)
+	if x.RenderHeightMapType == HeightMapDataHasData {
+		data, _ := x.RenderHeightMapData.Value()
+		if data == nil {
+			data = make([]int8, 256)
+		}
+		FuncSliceOfLen(r, 256, &data, r.Int8)
+		x.RenderHeightMapData = Option(data)
+	} else {
+		x.RenderHeightMapData = Optional[[]int8]{}
+	}
 }
 
 // SubChunkOffset represents an offset from the base position of another sub chunk.

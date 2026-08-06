@@ -25,5 +25,9 @@ func (pk *SubChunk) Marshal(io protocol.IO) {
 	io.Bool(&pk.CacheEnabled)
 	io.Varint32(&pk.Dimension)
 	io.SubChunkPos(&pk.Position)
-	protocol.Slice(io, &pk.SubChunkEntries)
+	if pk.CacheEnabled {
+		protocol.Slice(io, &pk.SubChunkEntries)
+	} else {
+		protocol.FuncIOSlice(io, &pk.SubChunkEntries, protocol.SubChunkEntryNoCache)
+	}
 }
