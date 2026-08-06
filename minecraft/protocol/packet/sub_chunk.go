@@ -25,9 +25,7 @@ func (pk *SubChunk) Marshal(io protocol.IO) {
 	io.Bool(&pk.CacheEnabled)
 	io.Varint32(&pk.Dimension)
 	io.SubChunkPos(&pk.Position)
-	if pk.CacheEnabled {
-		protocol.Slice(io, &pk.SubChunkEntries)
-	} else {
-		protocol.FuncIOSlice(io, &pk.SubChunkEntries, protocol.SubChunkEntryNoCache)
-	}
+	// As of 1.26.40, entry codec no longer branches on CacheEnabled — BlobHash
+	// is an Optional on every entry (Cloudburst SubChunkSerializer_v2168).
+	protocol.Slice(io, &pk.SubChunkEntries)
 }
