@@ -11,6 +11,15 @@ const (
 	PlayerUpdateEntityOverridesTypeFloat
 )
 
+// Cereal type-name consts for each Update oneOf alternative (no Enum-as-Value).
+// See Mojang bedrock-protocol-docs IntOverride.json / ClearOverride.json / …
+const (
+	playerUpdateEntityOverridesNameClear = "clearoverrides"
+	playerUpdateEntityOverridesNameRemove = "removeoverride"
+	playerUpdateEntityOverridesNameInt    = "setintoverride"
+	playerUpdateEntityOverridesNameFloat  = "setfloatoverride"
+)
+
 // PlayerUpdateEntityOverrides is sent by the server to modify an entity's properties individually.
 type PlayerUpdateEntityOverrides struct {
 	// EntityUniqueID is the unique ID of the entity. The unique ID is a value that remains consistent across
@@ -34,12 +43,33 @@ func (*PlayerUpdateEntityOverrides) ID() uint32 {
 	return IDPlayerUpdateEntityOverrides
 }
 
+func playerUpdateEntityOverridesTypeName(t byte) string {
+	switch t {
+	case PlayerUpdateEntityOverridesTypeClearAll:
+		return playerUpdateEntityOverridesNameClear
+	case PlayerUpdateEntityOverridesTypeRemove:
+		return playerUpdateEntityOverridesNameRemove
+	case PlayerUpdateEntityOverridesTypeInt:
+		return playerUpdateEntityOverridesNameInt
+	case PlayerUpdateEntityOverridesTypeFloat:
+		return playerUpdateEntityOverridesNameFloat
+	}
+	return ""
+}
+
 func (pk *PlayerUpdateEntityOverrides) Marshal(io protocol.IO) {
-	// BDS/PMMP wire: ActorUniqueID + Varuint32 propertyIndex + Byte updateType + optional int/float.
-	// Do NOT write a separate Varuint32 "variant" — that desyncs Type (often becomes garbage like 14).
+	// 2168+ cereal: ActorUniqueID + propertyIndex + oneOf control (varuint32) +
+	// Type string (no Enum-as-Value) + optional value. NOT a duplicate Uint8 type.
 	io.ActorUniqueID(&pk.EntityUniqueID)
 	io.Varuint32(&pk.PropertyIndex)
-	io.Uint8(&pk.Type)
+
+	variant := uint32(pk.Type)
+	io.Varuint32(&variant)
+	pk.Type = byte(variant)
+
+	typeName := playerUpdateEntityOverridesTypeName(pk.Type)
+	io.String(&typeName)
+
 	switch pk.Type {
 	case PlayerUpdateEntityOverridesTypeClearAll, PlayerUpdateEntityOverridesTypeRemove:
 	case PlayerUpdateEntityOverridesTypeInt:
