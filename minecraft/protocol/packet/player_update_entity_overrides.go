@@ -35,15 +35,11 @@ func (*PlayerUpdateEntityOverrides) ID() uint32 {
 }
 
 func (pk *PlayerUpdateEntityOverrides) Marshal(io protocol.IO) {
+	// BDS/PMMP wire: ActorUniqueID + Varuint32 propertyIndex + Byte updateType + optional int/float.
+	// Do NOT write a separate Varuint32 "variant" — that desyncs Type (often becomes garbage like 14).
 	io.ActorUniqueID(&pk.EntityUniqueID)
 	io.Varuint32(&pk.PropertyIndex)
-	variant := uint32(pk.Type)
-	io.Varuint32(&variant)
 	io.Uint8(&pk.Type)
-	if variant != uint32(pk.Type) {
-		io.InvalidValue(pk.Type, "entity override type", "does not match the variant it was sent under")
-		return
-	}
 	switch pk.Type {
 	case PlayerUpdateEntityOverridesTypeClearAll, PlayerUpdateEntityOverridesTypeRemove:
 	case PlayerUpdateEntityOverridesTypeInt:
